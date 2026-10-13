@@ -73,6 +73,7 @@ textarea{min-height:60px;resize:vertical}
     <div><label>واتساب (بالرمز الدولي، بلا +)</label><input dir="ltr" id="whatsapp"></div>
   </div>
   <label>فيسبوك</label><input dir="ltr" id="facebook">
+  <label>رابط التحميل المباشر (المثبّت)</label><input dir="ltr" id="direct">
 </div>
 
 <div class="card steps" id="steps">
@@ -125,7 +126,7 @@ function field(path, label, val, opts = {}){
 function render(){
   const b = document.getElementById('banners');
   b.innerHTML = site.banners.map((x, i) => {
-    const custom = x.link && !['store','whatsapp','facebook'].includes(x.link);
+    const custom = x.link && !['store','whatsapp','facebook','direct'].includes(x.link);
     return `<div class="item">
       <div class="top"><b>إعلان ${i + 1}</b>
         <button class="ic" title="أعلى" onclick="move('banners',${i},-1)">▲</button>
@@ -163,7 +164,7 @@ function render(){
     </div>`;
   }).join('') || '<div class="muted" style="margin-top:10px">لا فيديوهات بعد.</div>';
 
-  ['store','whatsapp','facebook'].forEach(k => document.getElementById(k).value = site[k] || '');
+  ['store','whatsapp','facebook','direct'].forEach(k => document.getElementById(k).value = site[k] || '');
   bind();
 }
 
@@ -184,7 +185,7 @@ function bind(){
     site.banners[i].link = el.value === 'custom' ? 'https://' : el.value;
     save(); render();
   });
-  ['store','whatsapp','facebook'].forEach(k => document.getElementById(k).oninput = e => { site[k] = e.target.value.trim(); save(); });
+  ['store','whatsapp','facebook','direct'].forEach(k => document.getElementById(k).oninput = e => { site[k] = e.target.value.trim(); save(); });
 }
 
 function addBanner(){ site.banners.push({ar:{title:'',text:'',button:''},fr:{title:'',text:'',button:''},link:'store',image:'',color:'blue'}); save(); render(); }

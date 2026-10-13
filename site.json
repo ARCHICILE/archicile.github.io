@@ -2,6 +2,7 @@
   "store": "https://apps.microsoft.com/detail/9ND5C9QG8RD0",
   "whatsapp": "213540829697",
   "facebook": "https://www.facebook.com/touati.playholdmadridi",
+  "direct": "https://github.com/ARCHICILE/archicile.github.io/releases/latest/download/ARCHICILE-Setup.exe",
   "banners": [
     {
       "ar": { "title": "جرّب ARCHICILE مجانًا 30 يومًا", "text": "كل ما يحتاجه محل الهواتف في برنامج واحد: البيع، المخزن، الورشة، الديون والإحصائيات.", "button": "حمّل الآن" },

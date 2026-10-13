@@ -170,6 +170,36 @@ details[open] summary::after{content:"−"}
 details p{margin:0 0 16px;color:var(--muted)}
 
 /* ===== الاتصال ===== */
+/* ===== التحميل ===== */
+.dl{display:grid;grid-template-columns:1fr 1.25fr;gap:18px;align-items:start}
+.dlc{background:#fff;border:1px solid var(--line);border-radius:22px;padding:28px;position:relative}
+.dlc.main{border:2px solid var(--orange);box-shadow:0 20px 50px rgba(242,165,22,.15)}
+.dlc .rec{position:absolute;top:-13px;inset-inline-start:24px;background:var(--orange);color:var(--ink2);font-weight:800;font-size:13px;padding:4px 12px;border-radius:20px}
+.dlc h3{margin:4px 0 6px;font-size:22px}
+.dlc .sub{color:var(--muted);margin:0 0 16px}
+.dlc ul{list-style:none;padding:0;margin:0 0 20px}
+.dlc li{padding:5px 0;display:flex;gap:8px}
+.dlc li::before{content:"✓";color:var(--green);font-weight:800}
+.dlc .btn{width:100%;justify-content:center}
+.dlc .meta{color:var(--muted);font-size:13px;text-align:center;margin-top:8px}
+.how{margin-top:20px;border-top:1px dashed var(--line);padding-top:18px}
+.how b{display:block;margin-bottom:10px}
+.how ol{margin:0 0 14px;padding-inline-start:20px;color:var(--muted)}
+.how ol li{display:list-item;padding:3px 0}
+.how ol li::before{content:none}
+.how em{font-style:normal;color:var(--ink);font-weight:700}
+.ss{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ssw{background:#0067B8;color:#fff;border-radius:6px;padding:14px;font-family:"Segoe UI",Tahoma,sans-serif;font-size:11px;min-height:150px;display:flex;flex-direction:column;position:relative}
+.ssw h4{margin:0 0 6px;font-size:14px;font-weight:600}
+.ssw p{margin:0;opacity:.9;line-height:1.4}
+.ssw .lnk{margin-top:6px;text-decoration:underline;font-weight:700;outline:2px solid var(--orange);outline-offset:2px;border-radius:2px;width:max-content}
+.ssw .btns{margin-top:auto;display:flex;gap:6px;justify-content:flex-end}
+.ssw .btns span{border:1px solid rgba(255,255,255,.8);padding:4px 10px;font-size:10px}
+.ssw .btns .hl{outline:2px solid var(--orange);outline-offset:2px;background:rgba(255,255,255,.15);font-weight:700}
+.ssw .n{position:absolute;top:-10px;inset-inline-end:-10px;width:26px;height:26px;border-radius:50%;background:var(--orange);color:var(--ink2);font-weight:800;display:grid;place-items:center;font-size:14px;font-family:Tajawal,sans-serif}
+@media (max-width:980px){.dl{grid-template-columns:1fr}}
+@media (max-width:620px){.ss{grid-template-columns:1fr}}
+
 .contact{padding:0 0 80px}
 .cbox{background:linear-gradient(120deg,var(--blue),var(--blue2));border-radius:26px;padding:44px;color:#fff;display:flex;align-items:center;gap:30px;flex-wrap:wrap;box-shadow:0 30px 60px rgba(14,90,138,.3)}
 .cbox h2{margin:0 0 6px;font-size:32px}
@@ -233,7 +263,7 @@ footer .sp{flex:1}
     </nav>
     <div class="sp"></div>
     <div class="lang"><button data-l="ar">العربية</button><button data-l="fr">FR</button></div>
-    <a class="btn btn-primary js-store" target="_blank" rel="noopener"><span data-t="download"></span></a>
+    <a class="btn btn-primary" href="#download"><span data-t="download"></span></a>
     <button class="menu" aria-label="menu" onclick="document.getElementById('menu').classList.toggle('open')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
   </div>
 </header>
@@ -255,7 +285,7 @@ footer .sp{flex:1}
         <a class="btn btn-primary js-store" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8.5v8.5H3zM12.5 3H21v8.5h-8.5zM3 12.5h8.5V21H3zM12.5 12.5H21V21h-8.5z"/></svg><span data-t="store_btn"></span></a>
         <a class="btn btn-ghost js-wa" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.3-.5.1-1 .1-3.2-.7a11 11 0 01-4.3-3.8c-.3-.5-1-1.6-1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.4 1.8 2.2 1.2 1 2.2 1.4 2.5 1.5.3.2.5.1.7-.1l.9-1.1c.2-.3.4-.2.7-.1l2 .9c.3.1.5.2.6.4.1.1.1.8-.1 1.4z"/></svg><span data-t="wa_btn"></span></a>
       </div>
-      <div class="note" data-t="note"></div>
+      <div class="note"><span data-t="note"></span> · <a href="#download" style="color:var(--orange);text-decoration:underline" data-t="no_store"></a></div>
     </div>
     <div class="devices">
       <div class="laptop"><div class="scr"><img id="heroShot" src="assets/screens/01_home.png" alt="ARCHICILE"></div></div>
@@ -324,6 +354,36 @@ footer .sp{flex:1}
   </div>
 </section>
 
+<section id="download" style="padding-top:0">
+  <div class="wrap">
+    <div class="head reveal"><div class="k" data-t="dl_k"></div><h2 data-t="dl_h"></h2><p data-t="dl_p"></p></div>
+    <div class="dl">
+      <div class="dlc main reveal">
+        <span class="rec" data-t="dl_rec"></span>
+        <h3>Microsoft Store</h3>
+        <p class="sub" data-t="dl1_sub"></p>
+        <ul><li data-t="dl1_a"></li><li data-t="dl1_b"></li><li data-t="dl1_c"></li></ul>
+        <a class="btn btn-primary js-store" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8.5v8.5H3zM12.5 3H21v8.5h-8.5zM3 12.5h8.5V21H3zM12.5 12.5H21V21h-8.5z"/></svg><span data-t="store_btn"></span></a>
+        <div class="meta">Windows 10 / 11</div>
+      </div>
+      <div class="dlc reveal">
+        <h3 data-t="dl2_h"></h3>
+        <p class="sub" data-t="dl2_sub"></p>
+        <a class="btn btn-blue js-direct"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16"/></svg><span data-t="dl2_btn"></span></a>
+        <div class="meta" data-t="dl2_meta"></div>
+        <div class="how">
+          <b data-t="how_h"></b>
+          <ol><li data-t="how1" data-html></li><li data-t="how2" data-html></li><li data-t="how3" data-html></li></ol>
+          <div class="ss">
+            <div class="ssw"><span class="n">1</span><h4 data-t="ss_t"></h4><p data-t="ss_p"></p><span class="lnk" data-t="ss_more"></span><div class="btns"><span data-t="ss_ok"></span></div></div>
+            <div class="ssw"><span class="n">2</span><h4 data-t="ss_t"></h4><p data-t="ss_p2"></p><div class="btns"><span class="hl" data-t="ss_run"></span><span data-t="ss_no"></span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="faq" style="padding-top:0">
   <div class="wrap">
     <div class="head reveal"><div class="k" data-t="faq_k"></div><h2 data-t="faq_h"></h2></div>
@@ -382,6 +442,16 @@ const T = {
     s1h:'حمّل البرنامج', s1p:'من Microsoft Store بنقرة واحدة، تثبيت آمن والتحديثات تصلك وحدها.',
     s2h:'أدخل معلومات المحل', s2p:'اسم المحل، حساب صاحب المحل، العمال، ثم أدخل سلعتك أو استوردها من Excel.',
     s3h:'ابدأ البيع', s3p:'30 يومًا مجانًا. بعدها نفعّل لك البرنامج عن بُعد، فقط تواصل معنا.',
+    no_store:'لا يوجد عندك المتجر؟',
+    dl_k:'التحميل', dl_h:'حمّل ARCHICILE', dl_p:'طريقتان، ونفس البرنامج ونفس البيانات. يمكنك الانتقال من واحدة للأخرى دون أن تخسر شيئًا.',
+    dl_rec:'ننصح بها', dl1_sub:'الطريقة الأسهل والأكثر أمانًا.',
+    dl1_a:'تثبيت بنقرة واحدة، بلا تحذيرات', dl1_b:'التحديثات تصلك وحدها', dl1_c:'موقّع وموثوق من Microsoft',
+    dl2_h:'تحميل مباشر (بلا متجر)', dl2_sub:'للكمبيوترات التي أُزيل منها Microsoft Store (نسخ Windows المعدّلة).',
+    dl2_btn:'حمّل المثبّت', dl2_meta:'ARCHICILE-Setup.exe · 80 ميغا · Windows 10 / 11 (64 بت)',
+    how_h:'إذا ظهرت نافذة زرقاء عند فتح المثبّت:',
+    how1:'هذا عادي للبرامج الجديدة. اضغط <em>«مزيد من المعلومات»</em>.', how2:'ثم اضغط <em>«التشغيل على أي حال»</em>.', how3:'اتبع خطوات التثبيت، ثم افتح ARCHICILE من سطح المكتب.',
+    ss_t:'قام Windows بحماية الكمبيوتر', ss_p:'منع Microsoft Defender SmartScreen تطبيقًا غير معروف من البدء.', ss_more:'مزيد من المعلومات', ss_ok:'عدم التشغيل',
+    ss_p2:'التطبيق: ARCHICILE-Setup.exe', ss_run:'التشغيل على أي حال', ss_no:'عدم التشغيل',
     faq_k:'أسئلة شائعة', faq_h:'عندك سؤال؟',
     c_h:'جاهز تنظّم محلك؟', c_p:'حمّل البرنامج وجرّبه 30 يومًا، أو اسألنا أي سؤال على واتساب.',
     privacy:'سياسة الخصوصية',
@@ -427,6 +497,16 @@ const T = {
     s1h:'Téléchargez', s1p:'Depuis le Microsoft Store en un clic : installation sécurisée et mises à jour automatiques.',
     s2h:'Configurez le magasin', s2p:'Nom du magasin, compte du propriétaire, employés, puis ajoutez votre stock ou importez-le depuis Excel.',
     s3h:'Commencez à vendre', s3p:'30 jours gratuits. Ensuite nous activons le logiciel à distance : contactez-nous.',
+    no_store:'Pas de Microsoft Store ?',
+    dl_k:'TÉLÉCHARGEMENT', dl_h:'Téléchargez ARCHICILE', dl_p:"Deux façons, le même logiciel et les mêmes données : vous pouvez passer de l'une à l'autre sans rien perdre.",
+    dl_rec:'Recommandé', dl1_sub:'La façon la plus simple et la plus sûre.',
+    dl1_a:'Installation en un clic, sans avertissement', dl1_b:'Mises à jour automatiques', dl1_c:'Signé et vérifié par Microsoft',
+    dl2_h:'Téléchargement direct (sans Store)', dl2_sub:'Pour les ordinateurs sans Microsoft Store (versions de Windows modifiées).',
+    dl2_btn:"Télécharger l'installateur", dl2_meta:'ARCHICILE-Setup.exe · 80 Mo · Windows 10 / 11 (64 bits)',
+    how_h:"Si une fenêtre bleue s'affiche à l'ouverture :",
+    how1:'C\'est normal pour un nouveau logiciel. Cliquez sur <em>« Informations complémentaires »</em>.', how2:'Puis sur <em>« Exécuter quand même »</em>.', how3:"Suivez l'installation, puis ouvrez ARCHICILE depuis le bureau.",
+    ss_t:'Windows a protégé votre ordinateur', ss_p:"Microsoft Defender SmartScreen a empêché le démarrage d'une application non reconnue.", ss_more:'Informations complémentaires', ss_ok:'Ne pas exécuter',
+    ss_p2:'Application : ARCHICILE-Setup.exe', ss_run:'Exécuter quand même', ss_no:'Ne pas exécuter',
     faq_k:'FAQ', faq_h:'Une question ?',
     c_h:'Prêt à organiser votre magasin ?', c_p:'Téléchargez le logiciel et essayez-le 30 jours, ou posez-nous vos questions sur WhatsApp.',
     privacy:'Politique de confidentialité',
@@ -573,6 +653,7 @@ function links(){
   document.querySelectorAll('.js-store').forEach(a => a.href = link('store'));
   document.querySelectorAll('.js-wa').forEach(a => a.href = link('whatsapp'));
   document.querySelectorAll('.js-fb').forEach(a => a.href = link('facebook'));
+  document.querySelectorAll('.js-direct').forEach(a => a.href = site.direct);
 }
 
 document.querySelectorAll('.lang button').forEach(b => b.onclick = () => { lang = b.dataset.l; try { localStorage.setItem('lang', lang); } catch (e) {} apply(); });
@@ -580,7 +661,7 @@ document.querySelectorAll('#menu a').forEach(a => a.onclick = () => document.get
 document.getElementById('yr').textContent = new Date().getFullYear();
 
 // المحتوى القابل للتعديل في site.json (اللوحة الإعلانية، الفيديوهات، الروابط)
-const FALLBACK = {store:'https://apps.microsoft.com/detail/9ND5C9QG8RD0', whatsapp:'213540829697', facebook:'https://www.facebook.com/touati.playholdmadridi', banners:[], videos:[]};
+const FALLBACK = {store:'https://apps.microsoft.com/detail/9ND5C9QG8RD0', whatsapp:'213540829697', facebook:'https://www.facebook.com/touati.playholdmadridi', direct:'https://github.com/ARCHICILE/archicile.github.io/releases/latest/download/ARCHICILE-Setup.exe', banners:[], videos:[]};
 // ?preview=1: معاينة ما أُعدّ في صفحة الإدارة قبل نشره
 let draft = null;
 try { if (new URLSearchParams(location.search).has('preview')) draft = JSON.parse(localStorage.getItem('site_draft') || 'null'); } catch (e) {}
