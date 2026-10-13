@@ -64,7 +64,7 @@ label{display:block;font-size:13px;font-weight:700;margin-top:10px}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const sb = supabase.createClient('https://uttuyvvixmpibroskjgl.supabase.co', 'sb_publishable_9DOsdUynuRxd3tDoJOWd-w_ZZ2PQKcn', { auth: { persistSession: true, autoRefreshToken: true, storageKey: 'archicile-admin' } });
+const sb = supabase.createClient('https://uttuyvvixmpibroskjgl.supabase.co', 'sb_publishable_9DOsdUynuRxd3tDoJOWd-w_ZZ2PQKcn', { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'implicit', storageKey: 'archicile-admin' } });
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const PLANS = { basic: 'ARCHICILE', pro: 'ARCHICILE Pro', promax: 'ARCHICILE Pro Max' };
@@ -111,7 +111,8 @@ async function sendCode() {
   email = $('mail').value.trim().toLowerCase();
   if (!email.includes('@')) return loginView('email', 'اكتب البريد');
   $('go').disabled = true;
-  const { error } = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
+  // الرسالة فيها رمز من 6 أرقام؛ وإذا جاء رابط بدله، فهو يفتح هذه الصفحة ويُدخل مباشرة
+  const { error } = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: 'https://archicile.github.io/gestion/' } });
   if (error) return loginView('email', error.message);
   loginView('code');
 }
@@ -220,7 +221,7 @@ function stop() {
   apply(s.plan || 'basic', y, null, 'أُوقف');
 }
 
-sb.auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_OUT') loginView('email'); });
+sb.auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_OUT') loginView('email'); if (ev === 'SIGNED_IN' && location.hash.includes('access_token')) { history.replaceState(null, '', location.pathname); start(); } });
 start();
 </script>
 </body>
