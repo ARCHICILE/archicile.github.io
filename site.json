@@ -1,0 +1,29 @@
+{
+  "store": "https://apps.microsoft.com/detail/9ND5C9QG8RD0",
+  "whatsapp": "213540829697",
+  "facebook": "https://www.facebook.com/touati.playholdmadridi",
+  "banners": [
+    {
+      "ar": { "title": "جرّب ARCHICILE مجانًا 30 يومًا", "text": "كل ما يحتاجه محل الهواتف في برنامج واحد: البيع، المخزن، الورشة، الديون والإحصائيات.", "button": "حمّل الآن" },
+      "fr": { "title": "Essayez ARCHICILE gratuitement 30 jours", "text": "Tout ce dont un magasin de téléphones a besoin : ventes, stock, atelier, crédits et statistiques.", "button": "Télécharger" },
+      "link": "store",
+      "image": "",
+      "color": "blue"
+    },
+    {
+      "ar": { "title": "متوفر الآن على Microsoft Store", "text": "تثبيت آمن بنقرة واحدة، والتحديثات تصلك وحدها.", "button": "افتح المتجر" },
+      "fr": { "title": "Disponible sur le Microsoft Store", "text": "Installation sécurisée en un clic, mises à jour automatiques.", "button": "Ouvrir le Store" },
+      "link": "store",
+      "image": "",
+      "color": "dark"
+    },
+    {
+      "ar": { "title": "بِع من هاتفك داخل المحل", "text": "تطبيق البيع وتطبيق المصلّح يعملان مع الكمبيوتر عبر Wi‑Fi المحل، والطباعة من الكمبيوتر.", "button": "اسألنا على واتساب" },
+      "fr": { "title": "Vendez depuis votre téléphone", "text": "L'application de vente et l'application réparateur fonctionnent avec l'ordinateur via le Wi‑Fi du magasin.", "button": "Écrivez-nous sur WhatsApp" },
+      "link": "whatsapp",
+      "image": "",
+      "color": "orange"
+    }
+  ],
+  "videos": []
+}

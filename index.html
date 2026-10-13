@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ARCHICILE · برنامج تسيير محلات الهواتف</title>
+<meta name="description" content="ARCHICILE: برنامج كامل لتسيير محل الهواتف. البيع، المخزن بالكودبار وIMEI، ورشة التصليح، الزبائن والديون، العمال والإحصائيات، مع تطبيق للهاتف. Logiciel de gestion de magasin de téléphones.">
+<meta property="og:title" content="ARCHICILE · برنامج تسيير محلات الهواتف">
+<meta property="og:description" content="البيع، المخزن، ورشة التصليح، الديون والإحصائيات في برنامج واحد. تجربة مجانية 30 يومًا.">
+<meta property="og:image" content="assets/screens/01_home.png">
+<link rel="icon" href="assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14212B;--ink2:#0B141B;--muted:#5B6873;--line:#E3E8ED;--bg:#F5F7F9;--card:#fff;
+  --blue:#0E5A8A;--blue2:#1679B8;--blueSoft:#E3EEF6;--orange:#F2A516;--orangeDark:#B45309;--green:#1F7A4D;--wa:#1FA855;
+  --r:18px;--shadow:0 10px 30px rgba(20,33,43,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Tajawal,system-ui,"Segoe UI",Tahoma,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border-radius:12px;font-weight:800;font-size:16px;border:0;cursor:pointer;transition:transform .15s,box-shadow .15s,background .15s;font-family:inherit;white-space:nowrap}
+.btn:hover{transform:translateY(-2px)}
+.btn svg{width:20px;height:20px;flex:none}
+.btn-primary{background:var(--orange);color:var(--ink2);box-shadow:0 8px 22px rgba(242,165,22,.35)}
+.btn-blue{background:var(--blue);color:#fff}
+.btn-ghost{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn-wa{background:var(--wa);color:#fff}
+.btn-light{background:#fff;color:var(--ink);border:1px solid var(--line)}
+
+/* ===== الشريط العلوي ===== */
+header.nav{position:sticky;top:0;z-index:50;background:rgba(11,20,27,.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06)}
+.nav .wrap{display:flex;align-items:center;gap:18px;height:68px}
+.brand{display:flex;align-items:center;gap:10px;color:#fff}
+.brand img{width:38px;height:38px;border-radius:9px;background:#fff;padding:3px}
+.brand b{letter-spacing:3px;font-size:18px}
+.brand b span{color:var(--orange)}
+.nav nav{display:flex;gap:22px;margin-inline-start:18px}
+.nav nav a{color:rgba(255,255,255,.75);font-weight:500;font-size:15px}
+.nav nav a:hover{color:#fff}
+.nav .sp{flex:1}
+.lang{display:flex;background:rgba(255,255,255,.08);border-radius:10px;padding:3px}
+.lang button{background:none;border:0;color:rgba(255,255,255,.7);font:700 13px Tajawal,sans-serif;padding:6px 10px;border-radius:8px;cursor:pointer}
+.lang button.on{background:#fff;color:var(--ink)}
+.nav .btn{padding:9px 16px;font-size:14px}
+.menu{display:none;background:none;border:0;color:#fff;cursor:pointer;padding:6px}
+.menu svg{width:26px;height:26px}
+
+/* ===== اللوحة الإعلانية ===== */
+.promo{background:var(--ink2);padding:18px 0 0}
+.slides{position:relative;border-radius:22px;overflow:hidden;min-height:170px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.slide{position:absolute;inset:0;display:flex;align-items:center;gap:24px;padding:28px 36px;color:#fff;opacity:0;transform:translateX(30px);transition:opacity .6s,transform .6s;pointer-events:none;background-size:cover;background-position:center}
+[dir=rtl] .slide{transform:translateX(-30px)}
+.slide.on{opacity:1;transform:none;pointer-events:auto;position:relative}
+.slide.blue{background-image:linear-gradient(120deg,#0E5A8A,#1679B8 55%,#3BA0DB)}
+.slide.dark{background-image:linear-gradient(120deg,#14212B,#23384A 60%,#0E5A8A)}
+.slide.orange{background-image:linear-gradient(120deg,#B45309,#E08A0B 55%,#F2A516)}
+.slide.green{background-image:linear-gradient(120deg,#13553A,#1F7A4D 60%,#2FA36A)}
+.slide.img::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(11,20,27,.85),rgba(11,20,27,.35))}
+[dir=rtl] .slide.img::before{background:linear-gradient(270deg,rgba(11,20,27,.85),rgba(11,20,27,.35))}
+.slide>*{position:relative}
+.slide .txt{flex:1}
+.slide h3{margin:0 0 6px;font-size:28px;line-height:1.3;font-weight:800}
+.slide p{margin:0;opacity:.9;font-size:17px;max-width:620px}
+.slide .deco{width:110px;height:110px;flex:none;opacity:.9}
+.dots{position:absolute;bottom:12px;inset-inline-start:36px;display:flex;gap:7px;z-index:3}
+.dots button{width:9px;height:9px;border-radius:9px;border:0;background:rgba(255,255,255,.45);cursor:pointer;padding:0;transition:width .3s}
+.dots button.on{width:26px;background:#fff}
+
+/* ===== الواجهة ===== */
+.hero{background:radial-gradient(1200px 500px at 80% -10%,rgba(22,121,184,.35),transparent 60%),radial-gradient(800px 400px at 0% 100%,rgba(242,165,22,.12),transparent 60%),var(--ink2);color:#fff;padding:56px 0 90px;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1fr 1.15fr;gap:40px;align-items:center}
+.tag{display:inline-flex;align-items:center;gap:8px;background:rgba(242,165,22,.14);color:var(--orange);border:1px solid rgba(242,165,22,.35);padding:6px 12px;border-radius:30px;font-weight:700;font-size:14px}
+.hero h1{font-size:46px;line-height:1.2;margin:18px 0 14px;font-weight:800}
+.hero h1 em{font-style:normal;color:var(--orange)}
+.hero p.lead{font-size:19px;color:rgba(255,255,255,.78);margin:0 0 26px;max-width:520px}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+.hero .note{margin-top:16px;color:rgba(255,255,255,.55);font-size:14px}
+.devices{position:relative}
+.laptop{background:#1d2a35;border-radius:16px 16px 6px 6px;padding:12px 12px 0;box-shadow:0 40px 80px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.08)}
+.laptop .scr{border-radius:6px;overflow:hidden;aspect-ratio:1600/950;background:#fff}
+.laptop .scr img{width:100%;height:100%;object-fit:cover;object-position:top}
+.laptop::after{content:"";display:block;height:14px;margin:0 -40px;background:linear-gradient(#3a4a57,#22303b);border-radius:0 0 18px 18px}
+.phone{position:absolute;bottom:-38px;inset-inline-start:-26px;width:150px;aspect-ratio:9/19;background:#0b141b;border-radius:26px;padding:7px;border:2px solid #34444f;box-shadow:0 30px 60px rgba(0,0,0,.55)}
+.phone .in{width:100%;height:100%;border-radius:20px;overflow:hidden;background:#F3F5F7;color:var(--ink);font-size:9px;display:flex;flex-direction:column}
+.phone .bar{background:var(--ink);color:#fff;padding:12px 9px 8px;font-weight:800;font-size:10px}
+.phone .row{background:#fff;margin:5px 6px 0;border-radius:7px;padding:6px 7px;display:flex;justify-content:space-between;gap:4px;border:1px solid var(--line);white-space:nowrap;overflow:hidden}
+.phone .row span{overflow:hidden;text-overflow:ellipsis}
+.phone .row b{font-weight:800}
+.phone .pay{margin:auto 6px 8px;background:var(--blue);color:#fff;text-align:center;border-radius:8px;padding:8px;font-weight:800;font-size:10px}
+
+/* ===== الأرقام ===== */
+.facts{margin-top:-46px;position:relative;z-index:2}
+.facts .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.fact{background:var(--card);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);display:flex;gap:14px;align-items:center}
+.fact .ic{width:46px;height:46px;border-radius:12px;background:var(--blueSoft);color:var(--blue);display:grid;place-items:center;flex:none}
+.fact .ic svg{width:24px;height:24px}
+.fact b{display:block;font-size:20px;font-weight:800}
+.fact span{color:var(--muted);font-size:14px}
+
+section{padding:80px 0}
+.head{text-align:center;max-width:720px;margin:0 auto 42px}
+.head .k{color:var(--blue);font-weight:800;letter-spacing:1px;font-size:14px}
+.head h2{font-size:36px;margin:6px 0 10px;line-height:1.25}
+.head p{color:var(--muted);font-size:17px;margin:0}
+
+/* ===== المميزات ===== */
+.feats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.feat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;transition:transform .2s,box-shadow .2s}
+.feat:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.feat .ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;margin-bottom:14px;color:#fff}
+.feat .ic svg{width:24px;height:24px}
+.feat h3{margin:0 0 6px;font-size:18px}
+.feat p{margin:0;color:var(--muted);font-size:15px}
+
+/* ===== الصور ===== */
+.shots{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:24px}
+.tabs button{background:var(--bg);border:1px solid var(--line);border-radius:30px;padding:9px 18px;font:700 15px Tajawal,sans-serif;color:var(--ink);cursor:pointer}
+.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.shot{max-width:1000px;margin:0 auto;border-radius:16px;overflow:hidden;box-shadow:0 30px 70px rgba(20,33,43,.18);border:1px solid var(--line);cursor:zoom-in;background:#fff}
+.shot img{width:100%;aspect-ratio:1600/950;object-fit:cover;object-position:top}
+.shot-cap{text-align:center;color:var(--muted);margin-top:16px}
+
+/* ===== الفيديوهات ===== */
+.vids{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.vid{background:var(--card);border-radius:var(--r);overflow:hidden;border:1px solid var(--line)}
+.vid .media{position:relative;aspect-ratio:16/9;background:#0b141b;cursor:pointer}
+.vid .media.v{aspect-ratio:9/16;max-height:520px;margin:0 auto}
+.vid .media img{width:100%;height:100%;object-fit:cover;opacity:.85}
+.vid .media iframe,.vid .media video{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vid .play{position:absolute;inset:0;display:grid;place-items:center}
+.vid .play span{width:68px;height:68px;border-radius:50%;background:rgba(242,165,22,.95);display:grid;place-items:center;box-shadow:0 10px 30px rgba(0,0,0,.4);transition:transform .2s}
+.vid .media:hover .play span{transform:scale(1.08)}
+.vid .play svg{width:28px;height:28px;color:var(--ink2);margin-inline-start:4px}
+[dir=rtl] .vid .play svg{margin-inline-start:0;margin-inline-end:4px;transform:scaleX(-1)}
+.vid .t{padding:14px 16px;font-weight:800}
+.vid .t small{display:block;color:var(--muted);font-weight:500}
+.novid{text-align:center;color:var(--muted);background:#fff;border:1px dashed var(--line);border-radius:var(--r);padding:40px}
+
+/* ===== التطبيقات ===== */
+.apps{background:var(--ink2);color:#fff}
+.apps .head h2{color:#fff}.apps .head p{color:rgba(255,255,255,.7)}.apps .head .k{color:var(--orange)}
+.appgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.app{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);padding:24px}
+.app .ic{width:52px;height:52px;border-radius:14px;background:rgba(242,165,22,.15);color:var(--orange);display:grid;place-items:center;margin-bottom:14px}
+.app .ic svg{width:26px;height:26px}
+.app h3{margin:0 0 6px}
+.app p{margin:0;color:rgba(255,255,255,.7)}
+
+/* ===== الخطوات ===== */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:s}
+.step{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:26px;position:relative}
+.step::before{counter-increment:s;content:counter(s);position:absolute;top:-16px;inset-inline-start:22px;width:36px;height:36px;border-radius:50%;background:var(--orange);color:var(--ink2);font-weight:800;display:grid;place-items:center;font-size:18px}
+.step h3{margin:8px 0 6px}
+.step p{margin:0;color:var(--muted)}
+
+/* ===== الأسئلة ===== */
+.faq{max-width:820px;margin:0 auto}
+details{background:#fff;border:1px solid var(--line);border-radius:14px;margin-bottom:10px;padding:0 20px}
+summary{cursor:pointer;font-weight:800;padding:16px 0;list-style:none;display:flex;justify-content:space-between;gap:10px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--blue);font-size:22px;line-height:1}
+details[open] summary::after{content:"−"}
+details p{margin:0 0 16px;color:var(--muted)}
+
+/* ===== الاتصال ===== */
+.contact{padding:0 0 80px}
+.cbox{background:linear-gradient(120deg,var(--blue),var(--blue2));border-radius:26px;padding:44px;color:#fff;display:flex;align-items:center;gap:30px;flex-wrap:wrap;box-shadow:0 30px 60px rgba(14,90,138,.3)}
+.cbox h2{margin:0 0 6px;font-size:32px}
+.cbox p{margin:0;opacity:.85;font-size:17px}
+.cbox .txt{flex:1;min-width:260px}
+.cbox .cta{display:flex;gap:10px;flex-wrap:wrap}
+footer{background:var(--ink2);color:rgba(255,255,255,.6);padding:30px 0;font-size:14px}
+footer .wrap{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+footer a:hover{color:#fff}
+footer .sp{flex:1}
+
+/* صورة مكبّرة */
+.lb{position:fixed;inset:0;background:rgba(5,10,14,.92);z-index:100;display:none;place-items:center;padding:20px;cursor:zoom-out}
+.lb.on{display:grid}
+.lb img{max-height:92vh;border-radius:10px}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s}
+.reveal.in{opacity:1;transform:none}
+
+@media (max-width:980px){
+  .hero .wrap{grid-template-columns:1fr}
+  .hero h1{font-size:36px}
+  .devices{margin:10px 20px 30px}
+  .facts .grid,.feats{grid-template-columns:repeat(2,1fr)}
+  .vids,.appgrid,.steps{grid-template-columns:1fr 1fr}
+  .nav nav{display:none}
+  .nav nav.open{display:flex;position:absolute;top:68px;inset-inline:0;flex-direction:column;background:var(--ink2);padding:16px 20px;gap:14px}
+  .menu{display:block}
+}
+@media (max-width:620px){
+  .wrap{padding:0 16px}
+  .nav .btn{display:none}
+  .slide{padding:22px 20px 34px;flex-direction:column;align-items:flex-start;gap:12px}
+  .slide .deco{display:none}
+  .slide h3{font-size:22px}
+  .dots{inset-inline-start:20px}
+  .hero{padding:40px 0 80px}
+  .hero h1{font-size:30px}
+  .phone{width:120px;inset-inline-start:-10px;bottom:-28px}
+  .phone .in{font-size:8px}
+  .phone .pay{font-size:8px;padding:6px}
+  .facts .grid,.feats,.vids,.appgrid,.steps{grid-template-columns:1fr}
+  section{padding:60px 0}
+  .head h2{font-size:28px}
+  .cbox{padding:28px}
+  .cbox h2{font-size:26px}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="assets/logo.png" alt=""><b>ARCHI<span>CILE</span></b></a>
+    <nav id="menu">
+      <a href="#features" data-t="nav_features"></a>
+      <a href="#screens" data-t="nav_screens"></a>
+      <a href="#videos" data-t="nav_videos"></a>
+      <a href="#apps" data-t="nav_apps"></a>
+      <a href="#faq" data-t="nav_faq"></a>
+    </nav>
+    <div class="sp"></div>
+    <div class="lang"><button data-l="ar">العربية</button><button data-l="fr">FR</button></div>
+    <a class="btn btn-primary js-store" target="_blank" rel="noopener"><span data-t="download"></span></a>
+    <button class="menu" aria-label="menu" onclick="document.getElementById('menu').classList.toggle('open')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  </div>
+</header>
+
+<!-- اللوحة الإعلانية -->
+<div class="promo" id="top">
+  <div class="wrap">
+    <div class="slides" id="slides"><div class="dots" id="dots"></div></div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <span class="tag"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.9L22 9.6l-5.5 4.8L18.2 22 12 18.3 5.8 22l1.7-7.6L2 9.6l7.1-.7z"/></svg><span data-t="tag"></span></span>
+      <h1 data-t="h1" data-html></h1>
+      <p class="lead" data-t="lead"></p>
+      <div class="cta">
+        <a class="btn btn-primary js-store" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8.5v8.5H3zM12.5 3H21v8.5h-8.5zM3 12.5h8.5V21H3zM12.5 12.5H21V21h-8.5z"/></svg><span data-t="store_btn"></span></a>
+        <a class="btn btn-ghost js-wa" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.3-.5.1-1 .1-3.2-.7a11 11 0 01-4.3-3.8c-.3-.5-1-1.6-1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.4 1.8 2.2 1.2 1 2.2 1.4 2.5 1.5.3.2.5.1.7-.1l.9-1.1c.2-.3.4-.2.7-.1l2 .9c.3.1.5.2.6.4.1.1.1.8-.1 1.4z"/></svg><span data-t="wa_btn"></span></a>
+      </div>
+      <div class="note" data-t="note"></div>
+    </div>
+    <div class="devices">
+      <div class="laptop"><div class="scr"><img id="heroShot" src="assets/screens/01_home.png" alt="ARCHICILE"></div></div>
+      <div class="phone"><div class="in">
+        <div class="bar">ARCHICILE · <span data-t="ph_sale"></span></div>
+        <div class="row"><span>Galaxy A55</span><b>72000</b></div>
+        <div class="row"><span>iPhone 15</span><b>175000</b></div>
+        <div class="row"><span data-t="ph_acc"></span><b>1200</b></div>
+        <div class="pay"><span data-t="ph_pay"></span> · 248200</div>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<div class="facts">
+  <div class="wrap grid">
+    <div class="fact reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><b data-t="f1b"></b><span data-t="f1"></span></div></div>
+    <div class="fact reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></div><div><b data-t="f2b"></b><span data-t="f2"></span></div></div>
+    <div class="fact reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h9M8 3v2m3 0c-.5 4-3 7-7 9m3-5c1 2 3 4 6 5M13 21l4-10 4 10m-7-3h6"/></svg></div><div><b data-t="f3b"></b><span data-t="f3"></span></div></div>
+    <div class="fact reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div><div><b data-t="f4b"></b><span data-t="f4"></span></div></div>
+  </div>
+</div>
+
+<section id="features">
+  <div class="wrap">
+    <div class="head reveal"><div class="k" data-t="feat_k"></div><h2 data-t="feat_h"></h2><p data-t="feat_p"></p></div>
+    <div class="feats" id="feats"></div>
+  </div>
+</section>
+
+<section class="shots" id="screens">
+  <div class="wrap">
+    <div class="head reveal"><div class="k" data-t="shots_k"></div><h2 data-t="shots_h"></h2></div>
+    <div class="tabs" id="tabs"></div>
+    <div class="shot reveal" onclick="openLb(this.querySelector('img').src)"><img id="shotImg" src="assets/screens/01_home.png" alt=""></div>
+    <div class="shot-cap" id="shotCap"></div>
+  </div>
+</section>
+
+<section id="videos">
+  <div class="wrap">
+    <div class="head reveal"><div class="k" data-t="vid_k"></div><h2 data-t="vid_h"></h2><p data-t="vid_p"></p></div>
+    <div class="vids" id="vids"></div>
+  </div>
+</section>
+
+<section class="apps" id="apps">
+  <div class="wrap">
+    <div class="head reveal"><div class="k" data-t="apps_k"></div><h2 data-t="apps_h"></h2><p data-t="apps_p"></p></div>
+    <div class="appgrid">
+      <div class="app reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><h3 data-t="a1h"></h3><p data-t="a1p"></p></div>
+      <div class="app reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M9 7h6M9 11h6M9 15h3"/></svg></div><h3 data-t="a2h"></h3><p data-t="a2p"></p></div>
+      <div class="app reveal"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg></div><h3 data-t="a3h"></h3><p data-t="a3p"></p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head reveal"><div class="k" data-t="steps_k"></div><h2 data-t="steps_h"></h2></div>
+    <div class="steps">
+      <div class="step reveal"><h3 data-t="s1h"></h3><p data-t="s1p"></p></div>
+      <div class="step reveal"><h3 data-t="s2h"></h3><p data-t="s2p"></p></div>
+      <div class="step reveal"><h3 data-t="s3h"></h3><p data-t="s3p"></p></div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" style="padding-top:0">
+  <div class="wrap">
+    <div class="head reveal"><div class="k" data-t="faq_k"></div><h2 data-t="faq_h"></h2></div>
+    <div class="faq" id="faqList"></div>
+  </div>
+</section>
+
+<div class="contact">
+  <div class="wrap">
+    <div class="cbox reveal">
+      <div class="txt"><h2 data-t="c_h"></h2><p data-t="c_p"></p></div>
+      <div class="cta">
+        <a class="btn btn-wa js-wa" target="_blank" rel="noopener"><span data-t="wa_btn"></span></a>
+        <a class="btn btn-ghost js-fb" target="_blank" rel="noopener">Facebook</a>
+        <a class="btn btn-primary js-store" target="_blank" rel="noopener"><span data-t="store_btn"></span></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="assets/logo.png" alt=""><b>ARCHI<span>CILE</span></b></a>
+    <div class="sp"></div>
+    <a href="https://archicile.github.io/suivi/privacy.html" data-t="privacy"></a>
+    <span>© <span id="yr"></span> ARCHICILE</span>
+  </div>
+</footer>
+
+<div class="lb" id="lb" onclick="this.classList.remove('on')"><img id="lbImg" alt=""></div>
+
+<script src="assets/video.js"></script>
+<script>
+// ===== النصوص =====
+const T = {
+  ar: {
+    nav_features:'المميزات', nav_screens:'الصور', nav_videos:'الفيديوهات', nav_apps:'تطبيق الهاتف', nav_faq:'أسئلة',
+    download:'حمّل البرنامج', store_btn:'حمّل من Microsoft Store', wa_btn:'تواصل على واتساب',
+    tag:'برنامج جزائري لمحلات الهواتف',
+    h1:'سيّر محل الهواتف <em>بسهولة</em><br>من الكاشير إلى الورشة',
+    lead:'البيع، المخزن بالكودبار وIMEI، تصليح الهواتف، الزبائن والديون، العمال والإحصائيات. كل شيء في برنامج واحد، بالعربية والفرنسية.',
+    note:'تجربة مجانية 30 يومًا · بلا بطاقة دفع',
+    ph_sale:'بيع', ph_acc:'واقي شاشة', ph_pay:'الدفع',
+    f1b:'30 يومًا', f1:'تجربة مجانية كاملة',
+    f2b:'Android + iPhone', f2:'بِع من هاتفك داخل المحل',
+    f3b:'عربي / Français', f3:'البرنامج والوصولات',
+    f4b:'بياناتك عندك', f4:'في كمبيوتر المحل + نسخة مشفّرة',
+    feat_k:'المميزات', feat_h:'كل ما يحتاجه محلك في مكان واحد', feat_p:'صُمّم مع أصحاب محلات الهواتف، بأزرار واضحة وعمل سريع.',
+    shots_k:'من داخل البرنامج', shots_h:'شاهد البرنامج قبل أن تحمّله',
+    vid_k:'فيديوهات', vid_h:'شاهد كيف يعمل ARCHICILE', vid_p:'شروحات قصيرة لكل جزء من البرنامج.', vid_none:'الفيديوهات قريبًا. تابعنا على فيسبوك.',
+    apps_k:'تطبيق الهاتف', apps_h:'الكمبيوتر والهاتف يعملان معًا', apps_p:'بلا إنترنت وبلا اشتراك إضافي: الهاتف يتصل بالكمبيوتر عبر Wi‑Fi المحل.',
+    a1h:'البرنامج في الكمبيوتر', a1p:'قلب المحل: كل البيانات، الطباعة، والإحصائيات. يعمل حتى بلا إنترنت.',
+    a2h:'تطبيق البيع', a2p:'البائع وصاحب المحل يبيعون ويستلمون الهواتف للتصليح من الهاتف، والوصل يخرج من طابعة الكمبيوتر.',
+    a3h:'تطبيق المصلّح', a3p:'المصلّح يمسح ملصق الهاتف ويسجّل النتيجة: تم التصليح أو إرجاع، وسعر القطعة. الحساب يتم وحده.',
+    steps_k:'كيف تبدأ', steps_h:'3 خطوات وتبدأ العمل',
+    s1h:'حمّل البرنامج', s1p:'من Microsoft Store بنقرة واحدة، تثبيت آمن والتحديثات تصلك وحدها.',
+    s2h:'أدخل معلومات المحل', s2p:'اسم المحل، حساب صاحب المحل، العمال، ثم أدخل سلعتك أو استوردها من Excel.',
+    s3h:'ابدأ البيع', s3p:'30 يومًا مجانًا. بعدها نفعّل لك البرنامج عن بُعد، فقط تواصل معنا.',
+    faq_k:'أسئلة شائعة', faq_h:'عندك سؤال؟',
+    c_h:'جاهز تنظّم محلك؟', c_p:'حمّل البرنامج وجرّبه 30 يومًا، أو اسألنا أي سؤال على واتساب.',
+    privacy:'سياسة الخصوصية',
+    feats:[
+      ['الكاشير','بيع سريع بالكودبار وIMEI، دفع نقدًا أو دَين أو تقسيط، وفاتورة مطبوعة.','#0E5A8A','cart'],
+      ['ورشة التصليح','وصل وملصق لكل هاتف، متابعة الحالة، وصفحة يرى فيها الزبون حالة هاتفه.','#B45309','tool'],
+      ['المخزن','الكميات وأسعار الشراء والبيع، التنبيه عند النفاد، وطباعة الملصقات.','#1F7A4D','box'],
+      ['التبديل','استبدال هاتف قديم بجديد مع حساب الفرق وتسجيل الهاتف في المخزن.','#7C3AED','swap'],
+      ['الزبائن والديون','دفتر ديون لكل زبون، والدفعات، والتذكير.','#0E7490','users'],
+      ['العمال والمصلّحون','الحضور، السلف، الأجرة أو النسبة، وحساب كل مصلّح.','#BE185D','badge'],
+      ['الشراكات','مستثمر يضع مالًا في سلعة، والربح يُقسم بالنسبة المتفق عليها.','#CA8A04','hand'],
+      ['الإحصائيات','الربح اليومي والشهري، أفضل المنتجات، المصاريف، والمقارنة.','#4338CA','chart']
+    ],
+    shots:[['01_home','الرئيسية'],['02_pos','الكاشير'],['12_stock','المخزن'],['04_workshop','الورشة'],['03b_intake','استلام هاتف'],['09_stats','الإحصائيات'],['18_invest','الشراكات'],['17_sales','المبيعات']],
+    faq:[
+      ['هل يعمل البرنامج بلا إنترنت؟','نعم. كل البيع والمخزن والطباعة تعمل بلا إنترنت. الإنترنت يُستعمل فقط للتفعيل والنسخة الاحتياطية في السحابة إن أردتها.'],
+      ['أين تُحفظ بياناتي؟','في كمبيوتر محلك. ويمكنك تفعيل نسخة احتياطية مشفّرة يومية في السحابة، لا يستطيع أحد قراءتها غيرك.'],
+      ['هل أحتاج طابعة أو قارئ كودبار؟','لا، كلاهما اختياري. البرنامج يعمل مع أي طابعة وأي قارئ كودبار، وكاميرا الهاتف تعمل كقارئ.'],
+      ['كيف أفعّل البرنامج بعد التجربة؟','تواصل معنا على واتساب، ونفعّله لك عن بُعد دون أن تعيد تثبيت أي شيء.'],
+      ['هل أنقل بياناتي إلى كمبيوتر جديد؟','نعم، بملف نقل واحد أو من النسخة الاحتياطية في السحابة.']
+    ]
+  },
+  fr: {
+    nav_features:'Fonctionnalités', nav_screens:'Captures', nav_videos:'Vidéos', nav_apps:'Application mobile', nav_faq:'FAQ',
+    download:'Télécharger', store_btn:'Télécharger sur Microsoft Store', wa_btn:'Contact WhatsApp',
+    tag:'Logiciel algérien pour magasins de téléphones',
+    h1:'Gérez votre magasin de téléphones <em>simplement</em>',
+    lead:'Caisse, stock avec code-barres et IMEI, atelier de réparation, clients et crédits, employés et statistiques. Tout dans un seul logiciel, en arabe et en français.',
+    note:'Essai gratuit de 30 jours · sans carte bancaire',
+    ph_sale:'Vente', ph_acc:'Protection écran', ph_pay:'Encaisser',
+    f1b:'30 jours', f1:"d'essai gratuit complet",
+    f2b:'Android + iPhone', f2:'vendez depuis votre téléphone',
+    f3b:'Arabe / Français', f3:'logiciel et tickets',
+    f4b:'Vos données chez vous', f4:'sur votre PC + sauvegarde chiffrée',
+    feat_k:'FONCTIONNALITÉS', feat_h:'Tout votre magasin au même endroit', feat_p:'Conçu avec des propriétaires de magasins, avec des boutons clairs et un travail rapide.',
+    shots_k:'DANS LE LOGICIEL', shots_h:'Découvrez le logiciel avant de le télécharger',
+    vid_k:'VIDÉOS', vid_h:'Voyez ARCHICILE en action', vid_p:'De courtes vidéos pour chaque partie du logiciel.', vid_none:'Les vidéos arrivent bientôt. Suivez-nous sur Facebook.',
+    apps_k:'APPLICATION MOBILE', apps_h:"L'ordinateur et le téléphone travaillent ensemble", apps_p:"Sans internet ni abonnement : le téléphone se connecte à l'ordinateur via le Wi‑Fi du magasin.",
+    a1h:"Le logiciel sur l'ordinateur", a1p:"Le cœur du magasin : toutes les données, l'impression et les statistiques. Fonctionne même sans internet.",
+    a2h:'Application de vente', a2p:"Le vendeur et le propriétaire vendent et réceptionnent les réparations depuis le téléphone ; le ticket sort sur l'imprimante du PC.",
+    a3h:'Application réparateur', a3p:"Le réparateur scanne l'étiquette du téléphone et donne le résultat : réparé ou retour, et le prix de la pièce. Le calcul est automatique.",
+    steps_k:'COMMENCER', steps_h:'3 étapes pour démarrer',
+    s1h:'Téléchargez', s1p:'Depuis le Microsoft Store en un clic : installation sécurisée et mises à jour automatiques.',
+    s2h:'Configurez le magasin', s2p:'Nom du magasin, compte du propriétaire, employés, puis ajoutez votre stock ou importez-le depuis Excel.',
+    s3h:'Commencez à vendre', s3p:'30 jours gratuits. Ensuite nous activons le logiciel à distance : contactez-nous.',
+    faq_k:'FAQ', faq_h:'Une question ?',
+    c_h:'Prêt à organiser votre magasin ?', c_p:'Téléchargez le logiciel et essayez-le 30 jours, ou posez-nous vos questions sur WhatsApp.',
+    privacy:'Politique de confidentialité',
+    feats:[
+      ['Caisse','Vente rapide par code-barres et IMEI, paiement comptant, crédit ou échéances, facture imprimée.','#0E5A8A','cart'],
+      ['Atelier de réparation','Bon et étiquette pour chaque téléphone, suivi, et une page où le client voit l\'état de son téléphone.','#B45309','tool'],
+      ['Stock','Quantités, prix d\'achat et de vente, alertes de rupture et impression des étiquettes.','#1F7A4D','box'],
+      ['Échange','Reprise d\'un ancien téléphone avec calcul de la différence et entrée en stock.','#7C3AED','swap'],
+      ['Clients et crédits','Carnet de crédit par client, versements et rappels.','#0E7490','users'],
+      ['Employés et réparateurs','Présence, avances, salaire ou pourcentage, et le compte de chaque réparateur.','#BE185D','badge'],
+      ['Partenariats','Un investisseur finance du stock et le bénéfice est partagé selon le pourcentage convenu.','#CA8A04','hand'],
+      ['Statistiques','Bénéfice du jour et du mois, meilleurs produits, dépenses et comparaisons.','#4338CA','chart']
+    ],
+    shots:[['15_home_fr','Accueil'],['16_pos_fr','Caisse'],['12_stock','Stock'],['04_workshop','Atelier'],['03b_intake','Réception'],['09_stats','Statistiques'],['18_invest','Partenariats'],['17_sales','Ventes']],
+    faq:[
+      ['Le logiciel fonctionne-t-il sans internet ?',"Oui. Ventes, stock et impression fonctionnent sans internet. Internet sert uniquement à l'activation et à la sauvegarde cloud si vous l'activez."],
+      ['Où sont mes données ?',"Sur l'ordinateur de votre magasin. Vous pouvez activer une sauvegarde chiffrée quotidienne dans le cloud que personne d'autre ne peut lire."],
+      ["Faut-il une imprimante ou un lecteur code-barres ?","Non, les deux sont optionnels. Le logiciel fonctionne avec toute imprimante et tout lecteur, et la caméra du téléphone sert de lecteur."],
+      ["Comment activer le logiciel après l'essai ?",'Contactez-nous sur WhatsApp et nous l\'activons à distance, sans rien réinstaller.'],
+      ['Puis-je passer à un nouvel ordinateur ?','Oui, avec un fichier de transfert ou depuis la sauvegarde cloud.']
+    ]
+  }
+};
+
+const ICONS = {
+  cart:'<path d="M3 4h2l2.4 11h10.2L20 8H6.3"/><circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/>',
+  tool:'<path d="M14.7 6.3a4 4 0 00-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 005.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/>',
+  box:'<path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M3 7l9 4 9-4M12 11v10"/>',
+  swap:'<path d="M4 8h14l-3-3M20 16H6l3 3"/>',
+  users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.7-3.5 3.3-5.5 6.5-5.5s5.8 2 6.5 5.5M16 4.5a3.5 3.5 0 010 7M18 14.8c2 .7 3.2 2.5 3.5 5.2"/>',
+  badge:'<rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="9" cy="12" r="2.5"/><path d="M5.5 17c.5-1.6 1.8-2.5 3.5-2.5s3 .9 3.5 2.5M14 10h4M14 14h4"/>',
+  hand:'<path d="M3 12l4-4 4 2 3-3 7 6-4 4M7 8l-4 4 6 6 3-1 3 2 3-3"/>',
+  chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'
+};
+
+let lang = 'ar', site = null, slide = 0, timer = null;
+try { lang = new URLSearchParams(location.search).get('lang') || localStorage.getItem('lang') || 'ar'; } catch (e) {}
+if (!T[lang]) lang = 'ar';
+
+function esc(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function link(k){
+  if (!site) return '#';
+  if (k === 'store') return site.store;
+  if (k === 'whatsapp') return 'https://wa.me/' + site.whatsapp;
+  if (k === 'facebook') return site.facebook;
+  return k || '#';
+}
+
+function apply(){
+  const t = T[lang];
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  document.title = lang === 'ar' ? 'ARCHICILE · برنامج تسيير محلات الهواتف' : 'ARCHICILE · Logiciel de gestion de magasin de téléphones';
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const v = t[el.dataset.t]; if (v == null) return;
+    if (el.hasAttribute('data-html')) el.innerHTML = v; else el.textContent = v;
+  });
+  document.querySelectorAll('.lang button').forEach(b => b.classList.toggle('on', b.dataset.l === lang));
+  document.getElementById('feats').innerHTML = t.feats.map(f =>
+    `<div class="feat reveal"><div class="ic" style="background:${f[2]}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[f[3]]}</svg></div><h3>${esc(f[0])}</h3><p>${esc(f[1])}</p></div>`).join('');
+  document.getElementById('faqList').innerHTML = t.faq.map((q, i) => `<details${i ? '' : ' open'}><summary>${esc(q[0])}</summary><p>${esc(q[1])}</p></details>`).join('');
+  document.getElementById('tabs').innerHTML = t.shots.map((s, i) => `<button data-i="${i}">${esc(s[1])}</button>`).join('');
+  document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => shot(+b.dataset.i));
+  shot(0);
+  document.getElementById('heroShot').src = 'assets/screens/' + (lang === 'fr' ? '15_home_fr' : '01_home') + '.png';
+  renderBanners(); renderVideos(); observe();
+}
+
+function shot(i){
+  const s = T[lang].shots[i];
+  document.getElementById('shotImg').src = 'assets/screens/' + s[0] + '.png';
+  document.getElementById('shotCap').textContent = s[1];
+  document.querySelectorAll('#tabs button').forEach((b, j) => b.classList.toggle('on', j === i));
+}
+function openLb(src){ document.getElementById('lbImg').src = src; document.getElementById('lb').classList.add('on'); }
+
+// ===== اللوحة الإعلانية =====
+function renderBanners(){
+  const box = document.getElementById('slides');
+  const list = (site && site.banners || []).filter(b => b[lang] && b[lang].title);
+  box.querySelectorAll('.slide').forEach(s => s.remove());
+  const dots = document.getElementById('dots');
+  dots.innerHTML = '';
+  box.parentElement.parentElement.style.display = list.length ? '' : 'none';
+  list.forEach((b, i) => {
+    const c = b[lang];
+    const el = document.createElement(b.link ? 'a' : 'div');
+    el.className = 'slide ' + (b.image ? 'img' : (b.color || 'blue'));
+    if (b.image) el.style.backgroundImage = `url("${b.image.replace(/"/g, '')}")`;
+    if (b.link) { el.href = link(b.link); el.target = '_blank'; el.rel = 'noopener'; }
+    el.innerHTML = `<div class="txt"><h3>${esc(c.title)}</h3>${c.text ? `<p>${esc(c.text)}</p>` : ''}</div>` +
+      (c.button ? `<span class="btn ${b.color === 'orange' && !b.image ? 'btn-light' : 'btn-primary'}">${esc(c.button)}</span>` : '') +
+      (b.image ? '' : `<svg class="deco" viewBox="0 0 100 100" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="5"><rect x="22" y="10" width="56" height="80" rx="9"/><path d="M42 80h16"/><path d="M34 34h32M34 46h32M34 58h20" stroke="rgba(255,255,255,.6)"/></svg>`);
+    box.insertBefore(el, dots);
+    const d = document.createElement('button');
+    d.setAttribute('aria-label', String(i + 1));
+    d.onclick = () => go(i, true);
+    dots.appendChild(d);
+  });
+  dots.style.display = list.length > 1 ? '' : 'none';
+  slide = 0; go(0);
+}
+function go(i, user){
+  const s = document.querySelectorAll('#slides .slide'), d = document.querySelectorAll('#dots button');
+  if (!s.length) return;
+  slide = (i + s.length) % s.length;
+  s.forEach((x, j) => x.classList.toggle('on', j === slide));
+  d.forEach((x, j) => x.classList.toggle('on', j === slide));
+  clearInterval(timer);
+  if (s.length > 1) timer = setInterval(() => go(slide + 1), user ? 9000 : 6000);
+}
+
+// ===== الفيديوهات =====
+function renderVideos(){
+  const box = document.getElementById('vids');
+  const list = (site && site.videos || []).map(v => ({ ...v, p: ArchiVideo.parse(v.url) })).filter(v => v.p);
+  if (!list.length) { box.style.display = 'block'; box.innerHTML = `<div class="novid">${esc(T[lang].vid_none)}</div>`; return; }
+  box.style.display = '';
+  box.innerHTML = list.map((v, i) => {
+    const title = (v[lang] && v[lang].title) || (v.ar && v.ar.title) || (v.fr && v.fr.title) || '';
+    const sub = (v[lang] && v[lang].text) || '';
+    const thumb = v.p.thumb || v.thumb || '';
+    return `<div class="vid reveal"><div class="media${v.p.vertical ? ' v' : ''}" data-i="${i}">` +
+      (v.p.kind === 'file' ? `<video controls preload="metadata" src="${esc(v.p.src)}"></video>` :
+        (thumb ? `<img loading="lazy" src="${esc(thumb)}" alt="">` : '') + `<div class="play"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg></span></div>`) +
+      `</div>${title ? `<div class="t">${esc(title)}${sub ? `<small>${esc(sub)}</small>` : ''}</div>` : ''}</div>`;
+  }).join('');
+  box.querySelectorAll('.media[data-i]').forEach(m => {
+    const v = list[+m.dataset.i];
+    if (v.p.kind === 'file') return;
+    m.onclick = () => { m.innerHTML = `<iframe src="${v.p.embed}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`; m.onclick = null; };
+  });
+}
+
+// ===== الظهور عند النزول =====
+let io;
+function observe(){
+  if (!('IntersectionObserver' in window)) { document.querySelectorAll('.reveal').forEach(e => e.classList.add('in')); return; }
+  io = io || new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
+  document.querySelectorAll('.reveal:not(.in)').forEach(e => io.observe(e));
+}
+
+function links(){
+  document.querySelectorAll('.js-store').forEach(a => a.href = link('store'));
+  document.querySelectorAll('.js-wa').forEach(a => a.href = link('whatsapp'));
+  document.querySelectorAll('.js-fb').forEach(a => a.href = link('facebook'));
+}
+
+document.querySelectorAll('.lang button').forEach(b => b.onclick = () => { lang = b.dataset.l; try { localStorage.setItem('lang', lang); } catch (e) {} apply(); });
+document.querySelectorAll('#menu a').forEach(a => a.onclick = () => document.getElementById('menu').classList.remove('open'));
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+// المحتوى القابل للتعديل في site.json (اللوحة الإعلانية، الفيديوهات، الروابط)
+const FALLBACK = {store:'https://apps.microsoft.com/detail/9ND5C9QG8RD0', whatsapp:'213540829697', facebook:'https://www.facebook.com/touati.playholdmadridi', banners:[], videos:[]};
+// ?preview=1: معاينة ما أُعدّ في صفحة الإدارة قبل نشره
+let draft = null;
+try { if (new URLSearchParams(location.search).has('preview')) draft = JSON.parse(localStorage.getItem('site_draft') || 'null'); } catch (e) {}
+(draft ? Promise.resolve(draft) : fetch('site.json?v=' + Date.now()).then(r => r.ok ? r.json() : FALLBACK).catch(() => FALLBACK))
+  .then(j => { site = { ...FALLBACK, ...j }; links(); apply(); });
+</script>
+</body>
+</html>

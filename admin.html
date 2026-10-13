@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>ARCHICILE · إدارة الموقع</title>
+<link rel="icon" href="assets/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#14212B;--muted:#5B6873;--line:#DDE3E8;--bg:#F3F5F7;--blue:#0E5A8A;--blueSoft:#E3EEF6;--orange:#F2A516;--red:#B42318;--green:#1F7A4D}
+*{box-sizing:border-box}
+body{margin:0;font-family:Tajawal,system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--ink);color:#fff;padding:16px}
+header .w{display:flex;align-items:center;gap:12px}
+header img{width:34px;height:34px;background:#fff;border-radius:8px;padding:3px}
+header b{font-size:18px}
+.w{max-width:900px;margin:0 auto;padding:0 16px}
+main{padding:20px 0 120px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
+h2{margin:6px 0 4px;font-size:22px}
+.muted{color:var(--muted);font-size:14px}
+.item{border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:12px;background:#FAFBFC}
+.item .top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.item .top b{flex:1}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:block;font-size:13px;font-weight:700;margin:8px 0 4px}
+input,textarea,select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:15px Tajawal,sans-serif;background:#fff}
+input[dir=ltr]{text-align:left}
+textarea{min-height:60px;resize:vertical}
+.btn{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:10px;padding:10px 16px;font:700 15px Tajawal,sans-serif;cursor:pointer;text-decoration:none}
+.b1{background:var(--blue);color:#fff}.b2{background:var(--orange);color:var(--ink)}.b3{background:#fff;border:1px solid var(--line);color:var(--ink)}
+.ic{background:none;border:1px solid var(--line);border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:16px}
+.del{color:var(--red)}
+.ok{color:var(--green);font-weight:700}
+.bad{color:var(--red);font-weight:700}
+.bar{position:fixed;bottom:0;inset-inline:0;background:#fff;border-top:1px solid var(--line);padding:12px 0;box-shadow:0 -6px 20px rgba(0,0,0,.06)}
+.bar .w{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.steps{background:var(--blueSoft);border-radius:12px;padding:14px 18px;margin-top:10px;display:none}
+.steps.on{display:block}
+.steps ol{margin:6px 0;padding-inline-start:20px;line-height:1.9}
+.toast{position:fixed;top:16px;inset-inline:0;margin:auto;width:max-content;background:var(--ink);color:#fff;padding:10px 18px;border-radius:10px;display:none;z-index:9}
+@media (max-width:600px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="w"><img src="assets/logo.png" alt=""><b>إدارة موقع ARCHICILE</b></div></header>
+<main class="w">
+
+<div class="card">
+  <h2>كيف تعمل هذه الصفحة</h2>
+  <div class="muted">عدّل اللوحة الإعلانية والفيديوهات هنا، ثم اضغط «معاينة» لترى الموقع كما سيظهر. عندما يعجبك، اضغط «نشر» واتبع الخطوات.</div>
+</div>
+
+<div class="card">
+  <h2>اللوحة الإعلانية</h2>
+  <div class="muted">الإعلانات التي تتبدّل في أعلى الموقع. اكتب بالعربية وبالفرنسية. الصورة اختيارية (رابط صورة، أو صورة رفعتها في مجلد assets).</div>
+  <div id="banners"></div>
+  <button class="btn b3" style="margin-top:12px" onclick="addBanner()">+ إعلان جديد</button>
+</div>
+
+<div class="card">
+  <h2>الفيديوهات</h2>
+  <div class="muted">الصق رابط فيديو من YouTube أو TikTok أو Facebook، أو رابط ملف mp4.</div>
+  <div id="videos"></div>
+  <button class="btn b3" style="margin-top:12px" onclick="addVideo()">+ فيديو جديد</button>
+</div>
+
+<div class="card">
+  <h2>الروابط</h2>
+  <div class="grid">
+    <div><label>رابط Microsoft Store</label><input dir="ltr" id="store"></div>
+    <div><label>واتساب (بالرمز الدولي، بلا +)</label><input dir="ltr" id="whatsapp"></div>
+  </div>
+  <label>فيسبوك</label><input dir="ltr" id="facebook">
+</div>
+
+<div class="card steps" id="steps">
+  <h2>النشر</h2>
+  <ol>
+    <li>المحتوى نُسخ. اضغط الزر الأزرق «افتح الملف في GitHub».</li>
+    <li>في GitHub: اضغط في النص، ثم <b>Ctrl + A</b> ثم <b>Ctrl + V</b>.</li>
+    <li>اضغط الزر الأخضر <b>Commit changes</b> ثم مرة أخرى <b>Commit changes</b>.</li>
+    <li>بعد دقيقة أو دقيقتين يتغيّر الموقع.</li>
+  </ol>
+  <a class="btn b1" id="ghLink" target="_blank" rel="noopener">افتح الملف في GitHub</a>
+  <button class="btn b3" onclick="copy()">انسخ مرة أخرى</button>
+</div>
+
+</main>
+<div class="bar"><div class="w">
+  <button class="btn b2" onclick="preview()">معاينة</button>
+  <button class="btn b1" onclick="publish()">نشر</button>
+  <button class="btn b3" onclick="reset()">إلغاء التعديلات</button>
+  <span class="muted" id="state"></span>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script src="assets/video.js"></script>
+<script>
+const REPO = 'ARCHICILE/archicile.github.io';
+const COLORS = [['blue','أزرق'],['dark','داكن'],['orange','برتقالي'],['green','أخضر']];
+const LINKS = [['store','Microsoft Store'],['whatsapp','واتساب'],['facebook','فيسبوك'],['','بلا رابط'],['custom','رابط آخر…']];
+let site = null, original = null;
+
+function esc(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function toast(t){ const e = document.getElementById('toast'); e.textContent = t; e.style.display = 'block'; clearTimeout(e._t); e._t = setTimeout(() => e.style.display = 'none', 2500); }
+
+function load(){
+  let d = null;
+  try { d = JSON.parse(localStorage.getItem('site_draft') || 'null'); } catch (e) {}
+  fetch('site.json?v=' + Date.now()).then(r => r.json()).then(j => {
+    original = j;
+    site = d || JSON.parse(JSON.stringify(j));
+    document.getElementById('state').textContent = d ? 'عندك تعديلات لم تُنشر بعد' : '';
+    render();
+  });
+}
+
+function field(path, label, val, opts = {}){
+  const tag = opts.area ? 'textarea' : 'input';
+  return `<div><label>${label}</label><${tag} ${opts.ltr ? 'dir="ltr"' : ''} data-p="${path}"${tag === 'input' ? ` value="${esc(val)}"` : ''}>${tag === 'textarea' ? esc(val) : ''}${tag === 'textarea' ? '</textarea>' : ''}</div>`;
+}
+
+function render(){
+  const b = document.getElementById('banners');
+  b.innerHTML = site.banners.map((x, i) => {
+    const custom = x.link && !['store','whatsapp','facebook'].includes(x.link);
+    return `<div class="item">
+      <div class="top"><b>إعلان ${i + 1}</b>
+        <button class="ic" title="أعلى" onclick="move('banners',${i},-1)">▲</button>
+        <button class="ic" title="أسفل" onclick="move('banners',${i},1)">▼</button>
+        <button class="ic del" title="حذف" onclick="del('banners',${i})">✕</button></div>
+      <div class="grid">
+        ${field(`banners.${i}.ar.title`, 'العنوان (عربي)', x.ar?.title)}
+        ${field(`banners.${i}.fr.title`, 'Titre (français)', x.fr?.title, {ltr:1})}
+        ${field(`banners.${i}.ar.text`, 'النص (عربي)', x.ar?.text, {area:1})}
+        ${field(`banners.${i}.fr.text`, 'Texte (français)', x.fr?.text, {area:1, ltr:1})}
+        ${field(`banners.${i}.ar.button`, 'الزر (عربي، اختياري)', x.ar?.button)}
+        ${field(`banners.${i}.fr.button`, 'Bouton (français)', x.fr?.button, {ltr:1})}
+        <div><label>الرابط عند الضغط</label><select data-link="${i}">${LINKS.map(l => `<option value="${l[0]}" ${(custom ? 'custom' : (x.link || '')) === l[0] ? 'selected' : ''}>${l[1]}</option>`).join('')}</select>
+          ${custom ? `<input dir="ltr" style="margin-top:6px" data-p="banners.${i}.link" value="${esc(x.link)}">` : ''}</div>
+        <div><label>اللون</label><select data-p="banners.${i}.color">${COLORS.map(c => `<option value="${c[0]}" ${x.color === c[0] ? 'selected' : ''}>${c[1]}</option>`).join('')}</select></div>
+      </div>
+      ${field(`banners.${i}.image`, 'صورة الخلفية (اختياري): رابط، أو assets/اسم_الصورة.jpg', x.image, {ltr:1})}
+    </div>`;
+  }).join('') || '<div class="muted" style="margin-top:10px">لا إعلانات. اللوحة لن تظهر في الموقع.</div>';
+
+  const v = document.getElementById('videos');
+  v.innerHTML = site.videos.map((x, i) => {
+    const p = ArchiVideo.parse(x.url);
+    return `<div class="item">
+      <div class="top"><b>فيديو ${i + 1}</b>
+        <button class="ic" onclick="move('videos',${i},-1)">▲</button>
+        <button class="ic" onclick="move('videos',${i},1)">▼</button>
+        <button class="ic del" onclick="del('videos',${i})">✕</button></div>
+      ${field(`videos.${i}.url`, 'رابط الفيديو', x.url, {ltr:1})}
+      <div style="margin-top:4px">${!x.url ? '' : p ? `<span class="ok">✓ ${({youtube:'YouTube',tiktok:'TikTok',facebook:'Facebook',file:'ملف فيديو'})[p.kind]}</span>` : '<span class="bad">رابط غير معروف: استعمل YouTube أو TikTok أو Facebook أو mp4</span>'}</div>
+      <div class="grid">
+        ${field(`videos.${i}.ar.title`, 'العنوان (عربي)', x.ar?.title)}
+        ${field(`videos.${i}.fr.title`, 'Titre (français)', x.fr?.title, {ltr:1})}
+      </div>
+    </div>`;
+  }).join('') || '<div class="muted" style="margin-top:10px">لا فيديوهات بعد.</div>';
+
+  ['store','whatsapp','facebook'].forEach(k => document.getElementById(k).value = site[k] || '');
+  bind();
+}
+
+function setPath(path, val){
+  const ks = path.split('.'); let o = site;
+  for (let i = 0; i < ks.length - 1; i++) { o[ks[i]] = o[ks[i]] ?? {}; o = o[ks[i]]; }
+  o[ks[ks.length - 1]] = val;
+}
+function save(){ try { localStorage.setItem('site_draft', JSON.stringify(site)); } catch (e) {} document.getElementById('state').textContent = 'عندك تعديلات لم تُنشر بعد'; }
+
+function bind(){
+  document.querySelectorAll('[data-p]').forEach(el => el.oninput = el.onchange = () => {
+    setPath(el.dataset.p, el.value.trim()); save();
+    if (el.dataset.p.endsWith('.url')) { clearTimeout(el._t); el._t = setTimeout(render, 600); }
+  });
+  document.querySelectorAll('[data-link]').forEach(el => el.onchange = () => {
+    const i = +el.dataset.link;
+    site.banners[i].link = el.value === 'custom' ? 'https://' : el.value;
+    save(); render();
+  });
+  ['store','whatsapp','facebook'].forEach(k => document.getElementById(k).oninput = e => { site[k] = e.target.value.trim(); save(); });
+}
+
+function addBanner(){ site.banners.push({ar:{title:'',text:'',button:''},fr:{title:'',text:'',button:''},link:'store',image:'',color:'blue'}); save(); render(); }
+function addVideo(){ site.videos.push({url:'',ar:{title:''},fr:{title:''}}); save(); render(); }
+function del(k, i){ if (confirm('حذف؟')) { site[k].splice(i, 1); save(); render(); } }
+function move(k, i, d){ const a = site[k], j = i + d; if (j < 0 || j >= a.length) return; [a[i], a[j]] = [a[j], a[i]]; save(); render(); }
+function reset(){ if (!confirm('إلغاء كل التعديلات والرجوع للموقع المنشور؟')) return; try { localStorage.removeItem('site_draft'); } catch (e) {} load(); }
+function preview(){ save(); window.open('index.html?preview=1', '_blank'); }
+
+function clean(){
+  const s = JSON.parse(JSON.stringify(site));
+  s.banners = s.banners.filter(b => (b.ar?.title || b.fr?.title));
+  s.videos = s.videos.filter(v => ArchiVideo.parse(v.url));
+  return JSON.stringify(s, null, 2) + '\n';
+}
+function copy(){
+  const t = clean();
+  (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => toast('نُسخ ✓')).catch(() => {
+    const a = document.createElement('textarea'); a.value = t; document.body.appendChild(a); a.select(); document.execCommand('copy'); a.remove(); toast('نُسخ ✓');
+  });
+}
+function publish(){
+  copy();
+  document.getElementById('ghLink').href = `https://github.com/${REPO}/edit/main/site.json`;
+  const s = document.getElementById('steps'); s.classList.add('on'); s.scrollIntoView({behavior:'smooth'});
+}
+load();
+</script>
+</body>
+</html>
