@@ -170,6 +170,31 @@ details[open] summary::after{content:"−"}
 details p{margin:0 0 16px;color:var(--muted)}
 
 /* ===== الاتصال ===== */
+/* ===== الأسعار ===== */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:stretch}
+.pl{background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px;position:relative;display:flex;flex-direction:column}
+.pl.max{background:var(--ink2);color:#fff;border:2px solid var(--orange);box-shadow:0 30px 60px rgba(11,20,27,.25);transform:translateY(-8px)}
+.pl .best{position:absolute;top:-14px;inset-inline-start:24px;background:var(--orange);color:var(--ink2);font-weight:800;font-size:13px;padding:4px 14px;border-radius:20px}
+.pn{font-size:22px;font-weight:800;letter-spacing:.5px}
+.pn em{font-style:normal;color:var(--blue)}
+.pl.max .pn em{color:var(--orange)}
+.ps{color:var(--muted);font-size:14px;margin-top:2px;min-height:42px}
+.pl.max .ps{color:rgba(255,255,255,.65)}
+.pp{margin:14px 0 6px}
+.pp b{font-size:40px;font-weight:800;line-height:1}
+.pp small{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.pl.max .pp small{color:rgba(255,255,255,.65)}
+.pl ul{list-style:none;padding:0;margin:12px 0 0;flex:1}
+.pl li{padding:6px 0;display:flex;gap:8px;font-size:15px;border-top:1px dashed var(--line)}
+.pl.max li{border-color:rgba(255,255,255,.12)}
+.pl li::before{content:"✓";color:var(--green);font-weight:800}
+.pl.max li::before{color:var(--orange)}
+.pl li.plus{font-weight:800}
+.pl li.plus::before{content:"+"}
+.pnote{margin-top:14px;background:rgba(242,165,22,.12);border:1px solid rgba(242,165,22,.35);color:#FFD27A;border-radius:12px;padding:10px 12px;font-size:13px}
+.ptrial{text-align:center;margin:26px auto 0;max-width:640px;font-weight:700;color:var(--blue);font-size:17px}
+@media (max-width:980px){.plans{grid-template-columns:1fr}.pl.max{transform:none}}
+
 /* ===== التحميل ===== */
 .dl{display:grid;grid-template-columns:1fr 1.25fr;gap:18px;align-items:start}
 .dlc{background:#fff;border:1px solid var(--line);border-radius:22px;padding:28px;position:relative}
@@ -259,6 +284,7 @@ footer .sp{flex:1}
       <a href="#screens" data-t="nav_screens"></a>
       <a href="#videos" data-t="nav_videos"></a>
       <a href="#apps" data-t="nav_apps"></a>
+      <a href="#pricing" data-t="nav_pricing"></a>
       <a href="#faq" data-t="nav_faq"></a>
     </nav>
     <div class="sp"></div>
@@ -354,6 +380,32 @@ footer .sp{flex:1}
   </div>
 </section>
 
+<section id="pricing" style="padding-top:0">
+  <div class="wrap">
+    <div class="head reveal"><div class="k" data-t="pr_k"></div><h2 data-t="pr_h"></h2><p data-t="pr_p"></p></div>
+    <div class="plans">
+      <div class="pl reveal">
+        <div class="pn">ARCHICILE</div><div class="ps" data-t="pr1_s"></div>
+        <div class="pp"><b>8500</b> <span data-t="da"></span><small data-t="once"></small></div>
+        <ul id="pl1"></ul>
+      </div>
+      <div class="pl reveal">
+        <div class="pn">ARCHICILE <em>Pro</em></div><div class="ps" data-t="pr2_s"></div>
+        <div class="pp"><b>18500</b> <span data-t="da"></span><small data-t="once"></small></div>
+        <ul id="pl2"></ul>
+      </div>
+      <div class="pl max reveal">
+        <span class="best" data-t="best"></span>
+        <div class="pn">ARCHICILE <em>Pro Max</em></div><div class="ps" data-t="pr3_s"></div>
+        <div class="pp"><b>19900</b> <span data-t="da"></span><small data-t="pr3_once"></small></div>
+        <ul id="pl3"></ul>
+        <div class="pnote" data-t="pr3_note"></div>
+      </div>
+    </div>
+    <p class="ptrial reveal" data-t="pr_trial"></p>
+  </div>
+</section>
+
 <section id="download" style="padding-top:0">
   <div class="wrap">
     <div class="head reveal"><div class="k" data-t="dl_k"></div><h2 data-t="dl_h"></h2><p data-t="dl_p"></p></div>
@@ -442,6 +494,15 @@ const T = {
     s1h:'حمّل البرنامج', s1p:'من Microsoft Store بنقرة واحدة، تثبيت آمن والتحديثات تصلك وحدها.',
     s2h:'أدخل معلومات المحل', s2p:'اسم المحل، حساب صاحب المحل، العمال، ثم أدخل سلعتك أو استوردها من Excel.',
     s3h:'ابدأ البيع', s3p:'30 يومًا مجانًا. بعدها نفعّل لك البرنامج عن بُعد، فقط تواصل معنا.',
+    nav_pricing:'الأسعار',
+    pr_k:'الأسعار', pr_h:'اختر باقتك', pr_p:'تدفع مرة واحدة والبرنامج لك. والترقية لاحقًا بدفع الفرق فقط.',
+    pr1_s:'كل ما يحتاجه المحل كل يوم', pr2_s:'للمحل الذي يعمل بفريق', pr3_s:'المحل كاملًا، حتى وأنت بعيد',
+    da:'دج', once:'مرة واحدة · مدى الحياة', pr3_once:'مرة واحدة · السنة الأولى من خدمات الإنترنت مشمولة',
+    best:'الأفضل', pr3_note:'بعد السنة الأولى: 3000 دج في السنة لخدمات الإنترنت. وإن لم تجدد، يبقى عندك Pro كاملًا.',
+    pr_trial:'جرّب ARCHICILE Pro Max كاملًا مجانًا 30 يومًا، ثم اختر الباقة التي تناسبك.',
+    pl1:['الكاشير والمبيعات والفواتير','المخزن بالكودبار وIMEI وطباعة الملصقات','ورشة التصليح: الوصل والملصق والمتابعة','الزبائن والديون، والموردون','المصاريف والإحصائيات','تعديل الفواتير (مع السبب)'],
+    pl2:['+كل ما في ARCHICILE','التبديل (هاتف قديم مقابل جديد)','العمال والمصلّحون ونسبهم','المحلات التي تصلّح لها','الشراكات مع المستثمرين','تطبيق البيع وتطبيق المصلّح في الهاتف'],
+    pl3:['+كل ما في Pro','صفحة متابعة التصليح للزبون (QR)','الوصول من بعيد: محلك في هاتفك من أي مكان','نسخة احتياطية يومية مشفّرة في السحابة','3 تعديلات خاصة بمحلك في السنة','أولوية في الدعم'],
     no_store:'لا يوجد عندك المتجر؟',
     dl_k:'التحميل', dl_h:'حمّل ARCHICILE', dl_p:'طريقتان، ونفس البرنامج ونفس البيانات. يمكنك الانتقال من واحدة للأخرى دون أن تخسر شيئًا.',
     dl_rec:'ننصح بها', dl1_sub:'الطريقة الأسهل والأكثر أمانًا.',
@@ -497,6 +558,15 @@ const T = {
     s1h:'Téléchargez', s1p:'Depuis le Microsoft Store en un clic : installation sécurisée et mises à jour automatiques.',
     s2h:'Configurez le magasin', s2p:'Nom du magasin, compte du propriétaire, employés, puis ajoutez votre stock ou importez-le depuis Excel.',
     s3h:'Commencez à vendre', s3p:'30 jours gratuits. Ensuite nous activons le logiciel à distance : contactez-nous.',
+    nav_pricing:'Tarifs',
+    pr_k:'TARIFS', pr_h:'Choisissez votre offre', pr_p:'Vous payez une seule fois et le logiciel est à vous. Mise à niveau plus tard en payant seulement la différence.',
+    pr1_s:'Tout ce dont le magasin a besoin chaque jour', pr2_s:'Pour le magasin qui travaille en équipe', pr3_s:'Tout le magasin, même à distance',
+    da:'DA', once:'Une seule fois · à vie', pr3_once:'Une seule fois · première année de services internet incluse',
+    best:'Le meilleur', pr3_note:"Après la première année : 3000 DA par an pour les services internet. Sans renouvellement, vous gardez Pro complet.",
+    pr_trial:'Essayez ARCHICILE Pro Max complet gratuitement pendant 30 jours, puis choisissez votre offre.',
+    pl1:['Caisse, ventes et factures','Stock avec code-barres et IMEI, impression des étiquettes','Atelier : bon, étiquette et suivi','Clients et crédits, fournisseurs','Dépenses et statistiques','Modification des factures (avec motif)'],
+    pl2:["+Tout ARCHICILE",'Échange (ancien téléphone contre un nouveau)','Employés, réparateurs et pourcentages','Les magasins pour lesquels vous réparez','Partenariats avec des investisseurs','Application de vente et application réparateur'],
+    pl3:['+Tout Pro','Page de suivi de réparation pour le client (QR)','Accès à distance : votre magasin dans votre téléphone','Sauvegarde quotidienne chiffrée dans le cloud','3 modifications sur mesure par an','Support prioritaire'],
     no_store:'Pas de Microsoft Store ?',
     dl_k:'TÉLÉCHARGEMENT', dl_h:'Téléchargez ARCHICILE', dl_p:"Deux façons, le même logiciel et les mêmes données : vous pouvez passer de l'une à l'autre sans rien perdre.",
     dl_rec:'Recommandé', dl1_sub:'La façon la plus simple et la plus sûre.',
@@ -568,6 +638,7 @@ function apply(){
   document.getElementById('feats').innerHTML = t.feats.map(f =>
     `<div class="feat reveal"><div class="ic" style="background:${f[2]}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[f[3]]}</svg></div><h3>${esc(f[0])}</h3><p>${esc(f[1])}</p></div>`).join('');
   document.getElementById('faqList').innerHTML = t.faq.map((q, i) => `<details${i ? '' : ' open'}><summary>${esc(q[0])}</summary><p>${esc(q[1])}</p></details>`).join('');
+  for (const k of ['pl1', 'pl2', 'pl3']) document.getElementById(k).innerHTML = t[k].map(x => x.startsWith('+') ? `<li class="plus">${esc(x.slice(1))}</li>` : `<li>${esc(x)}</li>`).join('');
   document.getElementById('tabs').innerHTML = t.shots.map((s, i) => `<button data-i="${i}">${esc(s[1])}</button>`).join('');
   document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => shot(+b.dataset.i));
   shot(0);

@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ARCHICILE إدارة">
+<meta name="theme-color" content="#0B141B">
+<title>ARCHICILE · الإدارة</title>
+<link rel="icon" href="../assets/logo.png">
+<link rel="apple-touch-icon" href="../assets/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#14212B;--ink2:#0B141B;--muted:#5B6873;--line:#E1E6EB;--bg:#F3F5F7;--card:#fff;--blue:#0E5A8A;--blueSoft:#E3EEF6;--orange:#F2A516;--orangeSoft:#FCEFD9;--orangeText:#B45309;--green:#1F7A4D;--greenSoft:#E2F2E9;--red:#B42318;--redSoft:#FDE8E7;--gray:#EEF1F4}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:Tajawal,-apple-system,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:env(safe-area-inset-bottom)}
+header{background:var(--ink2);color:#fff;padding:calc(14px + env(safe-area-inset-top)) 16px 14px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:5}
+header img{width:32px;height:32px;background:#fff;border-radius:8px;padding:2px}
+header b{flex:1;font-size:17px;letter-spacing:1px}
+header button{background:rgba(255,255,255,.1);color:#fff;border:0;border-radius:10px;padding:8px 12px;font:700 13px Tajawal,sans-serif}
+main{max-width:640px;margin:0 auto;padding:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+h2{margin:0 0 6px;font-size:20px}
+.muted{color:var(--muted);font-size:14px}
+input{width:100%;padding:14px;border:1px solid var(--line);border-radius:12px;font:17px Tajawal,sans-serif;background:#fff;margin-top:8px}
+input[dir=ltr]{text-align:left}
+.code{letter-spacing:8px;text-align:center !important;font-size:26px;font-weight:800}
+.btn{display:block;width:100%;border:0;border-radius:12px;padding:15px;font:800 16px Tajawal,sans-serif;margin-top:10px;cursor:pointer}
+.b1{background:var(--blue);color:#fff}.b2{background:var(--orange);color:var(--ink2)}.b3{background:var(--gray);color:var(--ink)}.bg{background:var(--green);color:#fff}.br{background:var(--redSoft);color:var(--red)}
+.btn:disabled{opacity:.5}
+.err{color:var(--red);font-weight:700;margin-top:8px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.stat b{display:block;font-size:20px}.stat span{font-size:12px;color:var(--muted)}
+.shop{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:8px;cursor:pointer}
+.shop .top{display:flex;align-items:center;gap:8px}
+.shop .n{flex:1;font-weight:800;font-size:16px}
+.pill{border-radius:20px;padding:3px 10px;font-size:12px;font-weight:800;white-space:nowrap}
+.p-trial{background:var(--orangeSoft);color:var(--orangeText)}.p-basic{background:var(--gray);color:var(--ink)}.p-pro{background:var(--blueSoft);color:var(--blue)}.p-promax{background:var(--ink);color:var(--orange)}.p-exp{background:var(--redSoft);color:var(--red)}
+.shop .sub{color:var(--muted);font-size:13px;margin-top:4px}
+.sheet{position:fixed;inset:0;background:rgba(5,10,14,.55);display:none;align-items:flex-end;z-index:20}
+.sheet.on{display:flex}
+.sheet .in{background:var(--bg);width:100%;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom))}
+.kv{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px}
+.kv span:first-child{color:var(--muted)}
+.ltr{direction:ltr;font-family:ui-monospace,monospace;font-size:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.plan{border:2px solid var(--line);border-radius:14px;padding:12px;background:#fff;margin-top:8px;cursor:pointer;text-align:start;width:100%;font:inherit}
+.plan b{font-size:16px}.plan small{display:block;color:var(--muted)}
+.plan.promax{border-color:var(--orange)}
+details{margin-top:10px}
+summary{font-weight:700;color:var(--blue);cursor:pointer;padding:6px 0}
+label{display:block;font-size:13px;font-weight:700;margin-top:10px}
+.toast{position:fixed;top:calc(12px + env(safe-area-inset-top));inset-inline:12px;background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;display:none;z-index:30;font-weight:700}
+.empty{text-align:center;color:var(--muted);padding:30px}
+</style>
+</head>
+<body>
+<header><img src="../assets/logo.png" alt=""><b>ARCHICILE · الإدارة</b><button id="out" style="display:none" onclick="logout()">خروج</button></header>
+<main id="app"></main>
+<div class="sheet" id="sheet" onclick="if(event.target===this)closeSheet()"><div class="in" id="sheetIn"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const sb = supabase.createClient('https://uttuyvvixmpibroskjgl.supabase.co', 'sb_publishable_9DOsdUynuRxd3tDoJOWd-w_ZZ2PQKcn', { auth: { persistSession: true, autoRefreshToken: true, storageKey: 'archicile-admin' } });
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const PLANS = { basic: 'ARCHICILE', pro: 'ARCHICILE Pro', promax: 'ARCHICILE Pro Max' };
+const PRICES = { basic: 8500, pro: 18500, promax: 19900 };
+const LIFETIME = '2099-12-31';
+let shops = [], email = '', q = '';
+
+function toast(t) { const e = $('toast'); e.textContent = t; e.style.display = 'block'; clearTimeout(e._t); e._t = setTimeout(() => e.style.display = 'none', 3200); }
+function today() { const d = new Date(); return d.toISOString().slice(0, 10); }
+function addYear(iso) { const d = new Date(iso + 'T12:00:00'); d.setFullYear(d.getFullYear() + 1); return d.toISOString().slice(0, 10); }
+function fmt(iso) { if (!iso) return '—'; if (iso >= '2090') return 'مدى الحياة'; const [y, m, d] = iso.slice(0, 10).split('-'); return `${d}/${m}/${y}`; }
+function ago(ts) { if (!ts) return 'لم يتصل'; const m = Math.round((Date.now() - new Date(ts)) / 60000); if (m < 2) return 'متصل الآن'; if (m < 60) return `منذ ${m} دقيقة`; const h = Math.round(m / 60); if (h < 24) return `منذ ${h} ساعة`; return `منذ ${Math.round(h / 24)} يوم`; }
+function daysLeft(iso) { return Math.ceil((new Date(iso + 'T23:59:59') - Date.now()) / 86400000); }
+
+// حالة المحل
+function status(s) {
+  const lic = s.license_until && s.license_until >= today();
+  if (lic) {
+    const p = s.plan || 'promax';
+    let extra = '';
+    if (p === 'promax') extra = s.services_until && s.services_until >= today() ? ` · الخدمات حتى ${fmt(s.services_until)}` : ' · الخدمات منتهية';
+    return { cls: 'p-' + p, label: PLANS[p].replace('ARCHICILE ', '') === 'ARCHICILE' ? 'الأساسي' : PLANS[p].replace('ARCHICILE ', ''), sub: `مُرخَّص ${fmt(s.license_until)}${extra}` };
+  }
+  if (s.in_trial) return { cls: 'p-trial', label: 'تجربة', sub: `باقي ${daysLeft(s.trial_until)} يوم` };
+  return { cls: 'p-exp', label: 'منتهٍ', sub: s.license_until ? `انتهى ${fmt(s.license_until)}` : `انتهت التجربة ${fmt(s.trial_until)}` };
+}
+
+// ===== الدخول =====
+function loginView(step, err) {
+  $('out').style.display = 'none';
+  $('app').innerHTML = step === 'code' ? `
+    <div class="card"><h2>الرمز</h2><div class="muted">أرسلنا رمزًا من 6 أرقام إلى ${esc(email)}. انظر في البريد (وفي Spam).</div>
+      <input id="code" class="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" dir="ltr" placeholder="000000">
+      ${err ? `<div class="err">${esc(err)}</div>` : ''}
+      <button class="btn b1" id="go" onclick="verify()">دخول</button>
+      <button class="btn b3" onclick="loginView('email')">بريد آخر</button></div>` : `
+    <div class="card"><h2>الدخول</h2><div class="muted">اكتب بريدك، ويصلك رمز دخول.</div>
+      <input id="mail" type="email" dir="ltr" autocomplete="email" placeholder="email@gmail.com" value="${esc(email)}">
+      ${err ? `<div class="err">${esc(err)}</div>` : ''}
+      <button class="btn b1" id="go" onclick="sendCode()">أرسل الرمز</button></div>`;
+  const i = $('code') || $('mail'); if (i) { i.focus(); i.onkeydown = e => { if (e.key === 'Enter') $('go').click(); }; }
+}
+async function sendCode() {
+  email = $('mail').value.trim().toLowerCase();
+  if (!email.includes('@')) return loginView('email', 'اكتب البريد');
+  $('go').disabled = true;
+  const { error } = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
+  if (error) return loginView('email', error.message);
+  loginView('code');
+}
+async function verify() {
+  const token = $('code').value.trim();
+  if (token.length < 6) return loginView('code', 'اكتب الرمز كاملًا');
+  $('go').disabled = true;
+  const { error } = await sb.auth.verifyOtp({ email, token, type: 'email' });
+  if (error) return loginView('code', 'الرمز غير صحيح أو انتهت مدته');
+  start();
+}
+async function logout() { await sb.auth.signOut(); loginView('email'); }
+
+async function start() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return loginView('email');
+  email = session.user.email;
+  const { data: ok, error } = await sb.rpc('admin_me');
+  if (error || !ok) { await sb.auth.signOut(); return loginView('email', 'هذا البريد ليس من مسؤولي ARCHICILE.'); }
+  $('out').style.display = '';
+  await load();
+}
+
+// ===== المحلات =====
+async function load() {
+  const { data, error } = await sb.rpc('admin_shops', { p_q: q || null });
+  if (error) { toast('خطأ: ' + error.message); return; }
+  shops = data || [];
+  render();
+}
+function render() {
+  const c = { trial: 0, basic: 0, pro: 0, promax: 0 };
+  for (const s of shops) { const st = status(s); if (st.cls === 'p-trial') c.trial++; else if (st.cls !== 'p-exp') c[s.plan || 'promax']++; }
+  $('app').innerHTML = `
+    <div class="stats">
+      <div class="stat"><b>${c.trial}</b><span>تجربة</span></div>
+      <div class="stat"><b>${c.basic}</b><span>الأساسي</span></div>
+      <div class="stat"><b>${c.pro}</b><span>Pro</span></div>
+      <div class="stat"><b>${c.promax}</b><span>Pro Max</span></div>
+    </div>
+    <input id="q" type="search" placeholder="ابحث: رقم المحل، الاسم، الهاتف" value="${esc(q)}" style="margin:0 0 10px">
+    ${shops.length ? shops.map((s, i) => { const st = status(s); return `
+      <div class="shop" onclick="openShop(${i})"><div class="top"><span class="n">${esc(s.name || 'بلا اسم')}</span><span class="pill ${st.cls}">${esc(st.label)}</span></div>
+      <div class="sub">${esc(st.sub)}</div><div class="sub">${esc(s.phone || '')} ${s.phone ? '·' : ''} ${ago(s.last_seen)}</div></div>`; }).join('') : '<div class="empty">لا محلات</div>'}
+    <button class="btn b3" onclick="load()">تحديث</button>`;
+  const qi = $('q'); qi.oninput = () => { clearTimeout(qi._t); qi._t = setTimeout(() => { q = qi.value.trim(); load(); }, 400); };
+}
+
+function openShop(i) {
+  const s = shops[i], st = status(s);
+  const base = s.services_until && s.services_until > today() ? s.services_until : today();
+  $('sheetIn').innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px"><h2 style="flex:1;margin:0">${esc(s.name || 'بلا اسم')}</h2><span class="pill ${st.cls}">${esc(st.label)}</span></div>
+    <div class="card" style="margin-top:12px">
+      <div class="kv"><span>رقم المحل</span><span class="ltr">${esc(s.shop)}</span></div>
+      <div class="kv"><span>الهاتف</span><span dir="ltr">${esc(s.phone || '—')}</span></div>
+      <div class="kv"><span>الحالة</span><span>${esc(st.sub)}</span></div>
+      <div class="kv"><span>بدأ التجربة</span><span>${fmt(s.created)}</span></div>
+      <div class="kv" style="border:0"><span>آخر اتصال</span><span>${ago(s.last_seen)}</span></div>
+    </div>
+    <div class="muted">تفعيل الباقة (مدى الحياة):</div>
+    ${['basic', 'pro', 'promax'].map(p => `<button class="plan ${p}" onclick="setPlan('${p}')"><b>${PLANS[p]}</b><small>${PRICES[p]} دج${p === 'promax' ? ' · مع سنة خدمات الإنترنت (حتى ' + fmt(addYear(today())) + ')' : ''}</small></button>`).join('')}
+    ${(s.plan === 'promax' && s.license_until >= today()) ? `<button class="btn bg" onclick="renew()">تجديد خدمات Pro Max سنة · 3000 دج<br><small style="font-weight:500">حتى ${fmt(addYear(base))}</small></button>` : ''}
+    <details><summary>تواريخ يدوية</summary>
+      <label>الباقة</label><select id="mp" style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);font:16px Tajawal">${['basic', 'pro', 'promax'].map(p => `<option value="${p}" ${s.plan === p ? 'selected' : ''}>${PLANS[p]}</option>`).join('')}</select>
+      <label>الترخيص حتى (فارغ = مدى الحياة)</label><input id="ml" type="date" value="${s.license_until && s.license_until < '2090' ? s.license_until : ''}">
+      <label>خدمات Pro Max حتى</label><input id="ms" type="date" value="${s.services_until || ''}">
+      <button class="btn b1" onclick="manual()">حفظ</button>
+      <button class="btn br" onclick="stop()">إيقاف الترخيص</button>
+    </details>
+    <button class="btn b3" onclick="closeSheet()">إغلاق</button>`;
+  $('sheet').classList.add('on');
+  $('sheet')._shop = s;
+}
+function closeSheet() { $('sheet').classList.remove('on'); }
+
+async function apply(plan, lic, services, msg) {
+  const s = $('sheet')._shop;
+  const { error } = await sb.rpc('admin_set', { p_shop: s.shop, p_plan: plan, p_license_until: lic, p_services_until: services });
+  if (error) return toast('خطأ: ' + error.message);
+  closeSheet();
+  toast(msg + ' · يظهر عند الزبون بزر «تحقق الآن» أو خلال ساعات');
+  load();
+}
+function setPlan(p) {
+  const s = $('sheet')._shop;
+  if (!confirm(`تفعيل ${PLANS[p]} لـ «${s.name || s.shop}»؟`)) return;
+  const keep = s.services_until && s.services_until > today() ? s.services_until : null;
+  apply(p, LIFETIME, p === 'promax' ? (keep && keep > addYear(today()) ? keep : addYear(today())) : null, `فُعّل ${PLANS[p]}`);
+}
+function renew() {
+  const s = $('sheet')._shop;
+  const base = s.services_until && s.services_until > today() ? s.services_until : today();
+  if (!confirm(`تجديد خدمات Pro Max حتى ${fmt(addYear(base))}؟`)) return;
+  apply('promax', s.license_until, addYear(base), 'جُدّدت الخدمات');
+}
+function manual() {
+  const p = $('mp').value, l = $('ml').value || LIFETIME, sv = $('ms').value || null;
+  if (p === 'promax' && !sv) return toast('اكتب تاريخ الخدمات لـ Pro Max');
+  apply(p, l, sv, 'حُفظ');
+}
+function stop() {
+  const s = $('sheet')._shop;
+  if (!confirm(`إيقاف ترخيص «${s.name || s.shop}»؟ البرنامج عنده يتوقف (بياناته تبقى).`)) return;
+  const y = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  apply(s.plan || 'basic', y, null, 'أُوقف');
+}
+
+sb.auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_OUT') loginView('email'); });
+start();
+</script>
+</body>
+</html>
