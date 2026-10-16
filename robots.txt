@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /gestion/
+Disallow: /admin.html
+
+Sitemap: https://archicile.com/sitemap.xml
