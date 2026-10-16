@@ -115,7 +115,7 @@ async function sendCode() {
   if (!email.includes('@')) return loginView('email', 'اكتب البريد');
   $('go').disabled = true;
   // الرسالة فيها رمز من 6 أرقام؛ وإذا جاء رابط بدله، فهو يفتح هذه الصفحة ويُدخل مباشرة
-  const { error } = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: 'https://archicile.github.io/gestion/' } });
+  const { error } = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: location.origin + '/gestion/' } });
   if (error) return loginView('email', error.message);
   loginView('code');
 }
