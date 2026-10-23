@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>ARCHICILE · متابعة التصليح</title>
+<style>
+:root{--ink:#14212B;--muted:#5B6873;--line:#DDE3E8;--blue:#0E5A8A;--green:#1F7A4D;--greenSoft:#E2F2E9;--orange:#B45309;--orangeSoft:#FCEFD9;--blueSoft:#E3EEF6;--graySoft:#EEF1F4}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,system-ui,"Segoe UI",Tahoma,sans-serif;background:#F3F5F7;color:var(--ink)}
+header{background:var(--ink);color:#fff;padding:18px 16px 54px;text-align:center}
+.brand{letter-spacing:4px;font-weight:800;font-size:13px;opacity:.75}
+.shop{font-size:24px;font-weight:800;margin-top:6px}
+main{max-width:480px;margin:-40px auto 24px;padding:0 16px}
+.card{background:#fff;border-radius:18px;padding:20px;box-shadow:0 6px 24px rgba(20,33,43,.08);margin-bottom:14px}
+.model{font-size:22px;font-weight:800}
+.code{color:var(--muted);direction:ltr;display:inline-block;margin-top:2px}
+.status{display:flex;align-items:center;gap:12px;border-radius:14px;padding:16px;margin-top:16px}
+.status .ic{font-size:32px}
+.status b{font-size:19px;display:block}
+.status span{font-size:14px;opacity:.9}
+.work{background:var(--blueSoft);color:var(--blue)}
+.done{background:var(--greenSoft);color:var(--green)}
+.returned{background:var(--orangeSoft);color:var(--orange)}
+.delivered{background:var(--graySoft);color:var(--ink)}
+.row{display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row .k{color:var(--muted)}
+.row .v{font-weight:700;direction:ltr}
+.pay{font-size:26px;font-weight:800}
+.btns{display:flex;gap:10px}
+.btns a{flex:1;text-align:center;padding:14px;border-radius:12px;text-decoration:none;font-weight:700;color:#fff}
+.call{background:var(--blue)}.wa{background:#25D366}.ok{background:var(--green)}.no{background:#B42318}
+.ask{border:2px solid var(--blue);text-align:center}.ask .k{color:var(--muted)}.ask .pay{margin:8px 0 14px}
+.msg2{font-weight:700;text-align:center}
+.fr{font-size:13px;color:var(--muted);direction:ltr;text-align:left;margin-top:4px}
+.msg{text-align:center;color:var(--muted);padding:30px 10px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:10px}
+</style>
+</head>
+<body>
+<header><div class="brand">ARCHICILE</div><div class="shop" id="shop">…</div></header>
+<main id="main"><div class="card msg">جاري التحميل… · Chargement…</div></main>
+<footer id="upd"></footer>
+<script>
+const URL_ = "https://uttuyvvixmpibroskjgl.supabase.co/rest/v1/rpc/status_get";
+const KEY = "sb_publishable_9DOsdUynuRxd3tDoJOWd-w_ZZ2PQKcn";
+const S = {
+  work: ["🔧", "هاتفكم قيد التصليح", "Votre téléphone est en cours de réparation"],
+  done: ["✅", "هاتفكم جاهز للاستلام", "Votre téléphone est prêt"],
+  returned: ["↩️", "لم يُصلَّح الهاتف، ويمكنكم استلامه", "Non réparé : vous pouvez le récupérer"],
+  delivered: ["✔️", "سُلِّم الهاتف", "Téléphone remis"],
+};
+const money = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " DA";
+const date = (s) => { const d = new Date(s); return d.toLocaleDateString("fr-FR"); };
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+function wa(n) { let d = String(n || "").replace(/\D/g, ""); if (d.startsWith("00")) d = d.slice(2); if (d.startsWith("0") && d.length === 10) d = "213" + d.slice(1); return d; }
+async function load() {
+  const p = new URLSearchParams(location.search);
+  const t = p.get("t") || location.hash.replace("#", "");
+  const main = document.getElementById("main");
+  if (!t) { main.innerHTML = '<div class="card msg">امسحوا رمز QR الموجود على وصل التصليح.<div class="fr" style="text-align:center">Scannez le code QR de votre reçu.</div></div>'; return; }
+  try {
+    const r = await fetch(URL_, { method: "POST", headers: { apikey: KEY, authorization: "Bearer " + KEY, "content-type": "application/json" }, body: JSON.stringify({ p_token: t }) });
+    const d = await r.json();
+    if (!d || !d.code) { main.innerHTML = '<div class="card msg">لم نجد هذا الوصل. قد يكون قديمًا.<div class="fr" style="text-align:center">Reçu introuvable.</div></div>'; return; }
+    document.getElementById("shop").textContent = d.shop || "";
+    document.title = (d.shop || "ARCHICILE") + " · " + d.code;
+    const s = S[d.status] || S.work;
+    let sub = "";
+    if (d.status === "returned" && d.reason === "refused") sub = "السعر لم يُقبل · Prix refusé";
+    if (d.status === "returned" && d.reason === "cannot") sub = "لا يمكن تصليحه · Réparation impossible";
+    if (d.status === "delivered" && d.delivered) sub = date(d.delivered);
+    let rows = '<div class="row"><span class="k">تاريخ الاستلام · Reçu le</span><span class="v">' + esc(date(d.created)) + "</span></div>";
+    if (d.toPay != null && d.status !== "delivered") rows += '<div class="row"><span class="k">المبلغ الباقي · Reste à payer</span><span class="v pay">' + esc(money(d.toPay)) + "</span></div>";
+    else if (d.price != null && d.status === "work") rows += '<div class="row"><span class="k">سعر التصليح · Prix</span><span class="v">' + esc(money(d.price)) + "</span></div>";
+    if (d.status === "delivered" && d.result === "repaired" && d.warranty) rows += '<div class="row"><span class="k">الضمان · Garantie</span><span class="v">' + esc(d.warranty) + " j</span></div>";
+    let quote = "";
+    if (d.quote != null && d.quoteState === "asked") quote = '<div class="card ask"><div class="k">السعر المقترح للتصليح · Prix proposé</div><div class="pay">' + esc(money(d.quote)) +
+      '</div><div class="btns"><a class="ok" href="#" onclick="answer(true);return false">✅ موافق · J\'accepte</a><a class="no" href="#" onclick="answer(false);return false">✖ لا أوافق · Je refuse</a></div></div>';
+    else if (d.quoteState === "accepted") quote = '<div class="card msg2 done">✅ وافقتم على السعر ' + esc(money(d.quote)) + '، والتصليح متواصل.<div class="fr">Prix accepté, la réparation continue.</div></div>';
+    else if (d.quoteState === "refused") quote = '<div class="card msg2 returned">لم توافقوا على السعر. سيتصل بكم المحل لاستلام الهاتف.<div class="fr">Prix refusé : le magasin vous contactera.</div></div>';
+    cur = { t, price: d.quote };
+    const n = wa(d.phone);
+    const btns = n ? '<div class="btns"><a class="call" href="tel:' + esc(d.phone) + '">📞 اتصال · Appeler</a><a class="wa" href="https://wa.me/' + n + "?text=" + encodeURIComponent(d.code) + '">WhatsApp</a></div>' : "";
+    main.innerHTML =
+      '<div class="card"><div class="model">' + esc(d.model) + '</div><div class="code">' + esc(d.code) + "</div>" +
+      '<div class="status ' + esc(d.status) + '"><div class="ic">' + s[0] + "</div><div><b>" + s[1] + "</b><span>" + s[2] + (sub ? " · " + esc(sub) : "") + "</span></div></div></div>" + quote +
+      '<div class="card">' + rows + "</div>" + (btns ? '<div class="card">' + btns + "</div>" : "");
+    document.getElementById("upd").textContent = "آخر تحديث · Mis à jour : " + new Date(d.updated).toLocaleString("fr-FR");
+  } catch (e) {
+    main.innerHTML = '<div class="card msg">تعذّر الاتصال. أعيدوا المحاولة.<div class="fr" style="text-align:center">Connexion impossible, réessayez.</div></div>';
+  }
+}
+let cur = null;
+async function answer(ok) {
+  if (!cur) return;
+  if (!confirm(ok ? "تأكيد الموافقة على السعر " + money(cur.price) + " ؟\nConfirmer le prix ?" : "تأكيد رفض السعر؟ لن يُصلَّح الهاتف.\nConfirmer le refus ?")) return;
+  try {
+    const r = await fetch(URL_.replace("status_get", "status_answer"), { method: "POST", headers: { apikey: KEY, authorization: "Bearer " + KEY, "content-type": "application/json" }, body: JSON.stringify({ p_token: cur.t, p_accept: ok, p_price: cur.price }) });
+    if (!(await r.json())) alert("تغيّر السعر أو سبق الجواب. أعيدوا فتح الصفحة.\nLe prix a changé, rechargez la page.");
+  } catch (e) { alert("تعذّر الاتصال. أعيدوا المحاولة.\nConnexion impossible."); }
+  load();
+}
+load();
+</script>
+</body>
+</html>
