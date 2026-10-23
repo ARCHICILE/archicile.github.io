@@ -136,15 +136,77 @@ async function start() {
   const { data: ok, error } = await sb.rpc('admin_me');
   if (error || !ok) { await sb.auth.signOut(); return loginView('email', 'هذا البريد ليس من مسؤولي ARCHICILE.'); }
   $('out').style.display = '';
-  await load();
+  await countPending();
+  pend ? go('reqs') : await load();
 }
 
 // ===== التبويبات: المحلات | إحصائيات الموقع =====
 function tabs() {
-  return `<div class="tabs"><button class="${view === 'shops' ? 'on' : ''}" onclick="go('shops')">المحلات</button>` +
-    `<button class="${view === 'site' ? 'on' : ''}" onclick="go('site')">إحصائيات الموقع</button></div>`;
+  const b = (v, t) => `<button class="${view === v ? 'on' : ''}" onclick="go('${v}')">${t}</button>`;
+  return `<div class="tabs">${b('reqs', 'الطلبات العاجلة' + (pend ? ' (' + pend + ')' : ''))}${b('shops', 'المحلات')}${b('wants', 'ما يريده الزبائن')}${b('site', 'إحصائيات الموقع')}</div>`;
 }
-function go(v) { view = v; v === 'shops' ? load() : loadStats(); }
+function go(v) { view = v; v === 'shops' ? load() : v === 'wants' ? loadWants() : v === 'reqs' ? loadReqs() : loadStats(); }
+
+// ===== الطلبات العاجلة: إخراج صاحب أو تجميده، مع الوثائق =====
+let pend = 0, reqs = [];
+const KIND = { remove: 'إخراج صاحب', freeze: 'تجميد مؤقت', unfreeze: 'رفع التجميد' };
+const RST = { pending: 'ينتظر قرارك', approved: 'مقبول (ينتظر المحل)', refused: 'مرفوض', applied: 'نُفّذ' };
+async function countPending() { const { data } = await sb.rpc('admin_requests_pending'); pend = data || 0; }
+function doc(d) {
+  return d.mime.startsWith('image')
+    ? `<img src="data:${d.mime};base64,${d.data}" style="width:100%;border-radius:10px;margin-top:8px">`
+    : `<a class="btn b3" download="${esc(d.name)}" href="data:${d.mime};base64,${d.data}">📎 ${esc(d.name)}</a>`;
+}
+async function loadReqs() {
+  $('app').innerHTML = tabs() + '<div class="empty">…</div>';
+  const { data, error } = await sb.rpc('admin_requests');
+  if (error) { toast('خطأ: ' + error.message); return; }
+  reqs = data || []; pend = reqs.filter(r => r.status === 'pending').length;
+  $('app').innerHTML = tabs() + (reqs.length ? reqs.map((r, i) => `
+    <div class="card" style="${r.status === 'pending' ? 'border:2px solid #b42318' : ''}">
+      <b>${esc(KIND[r.kind])} · ${esc(r.target.split('#')[0])}</b>
+      ${row('المحل', (r.shop_name || r.shop) + (r.shop_phone ? ' · ' + r.shop_phone : ''))}
+      ${row('السبب', r.reason)}${r.note ? row('ملاحظة', r.note) : ''}${row('الحالة', RST[r.status])}${row('التاريخ', fmt(r.created_at))}
+      ${(r.docs || []).map(doc).join('')}
+      ${r.status === 'pending' ? `<button class="btn bg" onclick="decide(${i}, true)">قبول</button><button class="btn br" onclick="decide(${i}, false)">رفض</button>` : (r.admin_note ? row('ردّك', r.admin_note) : '')}
+    </div>`).join('') : '<div class="empty">لا طلبات</div>') + '<button class="btn b3" onclick="loadReqs()">تحديث</button>';
+}
+async function decide(i, ok) {
+  const r = reqs[i];
+  const note = prompt(ok ? 'ملاحظة للمحل (اختيارية):' : 'سبب الرفض (يصل إلى المحل):', '');
+  if (note === null) return;
+  if (!ok && !note.trim()) return toast('اكتب سبب الرفض');
+  const { error } = await sb.rpc('admin_request_decide', { p_id: r.id, p_approve: ok, p_note: note.trim() || null });
+  if (error) return toast('خطأ: ' + error.message);
+  toast(ok ? 'قُبل: يُنفَّذ في المحل وحده' : 'رُفض'); loadReqs();
+}
+
+// ===== ما يريده الزبائن: الضغطات على الميزات المقفلة (30 يومًا) =====
+const FEAT = { whatsapp: 'رسائل واتساب', remote: 'الوصول من بعيد', cloud: 'الاسترجاع من السحابة', ai_invoice: 'قراءة الفواتير', ai_card: 'قراءة البطاقة', ai_repair: 'مساعد المصلّح', ai_report: 'التقرير الذكي', multipc: 'عدة كمبيوترات', exchange: 'التبديل', invest: 'الشراكات', shops: 'محلات أخرى', coowners: 'أكثر من صاحب', phoneapps: 'تطبيقات الهاتف' };
+async function loadWants() {
+  $('app').innerHTML = tabs() + '<div class="empty">…</div>';
+  const { data, error } = await sb.rpc('admin_feature_clicks', { p_days: 30 });
+  if (error) { toast('خطأ: ' + error.message); return; }
+  const rows = data || [];
+  $('app').innerHTML = tabs() + `<div class="card"><b>الميزات المقفلة التي ضغط عليها الزبائن (30 يومًا)</b>${rows.length ? rows.map(r => row((FEAT[r.feature] || r.feature) + ' · ' + r.shops + ' محل', r.clicks + ' ضغطة')).join('') : '<div class="muted">لا ضغطات بعد</div>'}</div>
+    <div class="card"><b>شهر Pro Max مجانًا</b><div class="muted">لكل محلات الأساسي وPro: Pro Max كاملًا 30 يومًا، ثم ترجع وحدها إلى باقتها.</div>
+    <button class="btn bg" onclick="promoAll()">إعطاء شهر Pro Max لكل محلات الأساسي وPro</button></div>
+    <button class="btn b3" onclick="loadWants()">تحديث</button>`;
+}
+function in30() { const d = new Date(Date.now() + 30 * 86400000); return d.toISOString().slice(0, 10); }
+async function promoAll() {
+  if (!confirm(`شهر Pro Max مجانًا حتى ${fmt(in30())} لكل محلات الأساسي وPro؟`)) return;
+  const { data, error } = await sb.rpc('admin_promo', { p_shop: '*', p_until: in30() });
+  if (error) return toast('خطأ: ' + error.message);
+  toast(`أُعطي لـ ${data.shops} محل`);
+}
+async function promoOne() {
+  const s = $('sheet')._shop;
+  if (!confirm(`شهر Pro Max مجانًا لـ «${s.name || s.shop}» حتى ${fmt(in30())}؟`)) return;
+  const { error } = await sb.rpc('admin_promo', { p_shop: s.shop, p_until: in30() });
+  if (error) return toast('خطأ: ' + error.message);
+  closeSheet(); toast('أُعطي شهر Pro Max'); load();
+}
 
 // ===== إحصائيات الموقع (عدّاد خاص بلا بيانات شخصية) + تحميلات GitHub =====
 async function loadStats() {
@@ -227,6 +289,7 @@ function openShop(i) {
     </div>
     <div class="muted">تفعيل الباقة (مدى الحياة):</div>
     ${['basic', 'pro', 'promax'].map(p => `<button class="plan ${p}" onclick="setPlan('${p}')"><b>${PLANS[p]}</b><small>${PRICES[p]} دج${p === 'promax' ? ' · مع سنة خدمات الإنترنت (حتى ' + fmt(addYear(today())) + ')' : ''}</small></button>`).join('')}
+    ${s.plan !== 'promax' ? `<button class="btn b1" onclick="promoOne()">شهر Pro Max مجانًا (حتى ${fmt(in30())})</button>` : ''}
     ${(s.plan === 'promax' && s.license_until >= today()) ? `<button class="btn bg" onclick="renew()">تجديد خدمات Pro Max سنة · 3000 دج<br><small style="font-weight:500">حتى ${fmt(addYear(base))}</small></button>` : ''}
     <details><summary>تواريخ يدوية</summary>
       <label>الباقة</label><select id="mp" style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);font:16px Tajawal">${['basic', 'pro', 'promax'].map(p => `<option value="${p}" ${s.plan === p ? 'selected' : ''}>${PLANS[p]}</option>`).join('')}</select>
